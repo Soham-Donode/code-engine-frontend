@@ -3,6 +3,7 @@ import "./globals.css";
 import { Inter, Geist_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { AuthProvider } from "@/context/AuthContext";
 import { ApiKeyProvider } from "@/context/ApiKeyContext";
 import { Navbar } from "@/components/Navbar";
 import { Toaster } from "@/components/ui/sonner";
@@ -37,13 +38,15 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <ApiKeyProvider>
-            <div className="flex min-h-screen flex-col">
-              <Navbar />
-              <main className="flex-1">{children}</main>
-            </div>
-            <Toaster position="bottom-right" richColors />
-          </ApiKeyProvider>
+          <AuthProvider>
+            <ApiKeyProvider>
+              <div className="flex min-h-screen flex-col">
+                <Navbar />
+                <main className="flex-1">{children}</main>
+              </div>
+              <Toaster position="bottom-right" richColors />
+            </ApiKeyProvider>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
