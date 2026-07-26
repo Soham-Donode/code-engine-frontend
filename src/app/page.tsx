@@ -301,14 +301,14 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#070A12] text-slate-100 font-sans antialiased">
-      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 space-y-7">
+    <div className="min-h-screen bg-[#0B0F17] text-slate-100 font-sans antialiased">
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 space-y-6">
         {/* 1. Header Section */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-1">
-            <h1 className="text-2xl font-bold tracking-tight text-white sm:text-3xl">API Keys</h1>
+            <h1 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">API Keys</h1>
             <p className="text-xs text-slate-400 flex items-center gap-1.5">
-              <span>Create and manage your API keys.</span>
+              <span>Create and manage your secret API keys.</span>
               <Info className="h-3.5 w-3.5 text-slate-500 hover:text-slate-300 cursor-pointer" />
             </p>
           </div>
@@ -323,9 +323,9 @@ export default function DashboardPage() {
                 setNewlyCreatedKey(null);
                 setIsCreateOpen(true);
               }}
-              className="bg-[#00E599] text-slate-950 hover:bg-[#00E599]/90 font-bold text-xs gap-1.5 px-4 h-9 rounded-xl"
+              className="bg-white text-slate-950 hover:bg-slate-200 font-semibold text-xs gap-1.5 px-3.5 h-8 rounded-lg"
             >
-              <Plus className="h-4 w-4 stroke-[2.5]" />
+              <Plus className="h-4 w-4 stroke-[2]" />
               New Key
             </Button>
           </div>
@@ -333,60 +333,60 @@ export default function DashboardPage() {
 
         {/* 2. Search Input Control */}
         <div className="relative max-w-md">
-          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-500" />
           <Input
             type="text"
             placeholder={user ? "Search by name..." : "Sign in to search API keys..."}
             disabled={!user}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 text-xs bg-[#090E18] border-[#1E293B] text-slate-100 placeholder:text-slate-500 rounded-xl h-9 focus-visible:ring-[#00E599]/50 disabled:opacity-50"
+            className="pl-9 text-xs bg-slate-900/60 border-slate-800 text-slate-100 placeholder:text-slate-500 rounded-lg h-9 focus-visible:ring-slate-700 disabled:opacity-50"
           />
         </div>
 
         {/* 3. API Keys Table Component / Unauthenticated State */}
         {!user ? (
-          <div className="rounded-2xl border border-[#1E293B] bg-[#090E18] p-12 text-center flex flex-col items-center justify-center space-y-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#00E599]/10 text-[#00E599] border border-[#00E599]/20">
-              <Lock className="h-6 w-6 text-[#00E599]" />
+          <div className="rounded-xl border border-slate-800 bg-[#0D1117] p-12 text-center flex flex-col items-center justify-center space-y-4 shadow-sm">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-800/80 text-slate-300 border border-slate-700/60">
+              <Lock className="h-5 w-5" />
             </div>
             <div className="space-y-1 max-w-sm">
-              <h3 className="text-base font-bold text-white">Authentication Required</h3>
+              <h3 className="text-sm font-semibold text-white">Authentication Required</h3>
               <p className="text-xs text-slate-400">
                 API keys are isolated per user account. Sign in with Google or Email to view, create, and manage your API keys.
               </p>
             </div>
             <Button
               onClick={() => setIsAuthModalOpen(true)}
-              className="bg-[#00E599] text-slate-950 hover:bg-[#00E599]/90 font-bold text-xs gap-2 px-5 h-9 rounded-xl mt-2"
+              className="bg-white text-slate-950 hover:bg-slate-200 font-semibold text-xs gap-2 px-4 h-8 rounded-lg mt-2"
             >
-              <LogIn className="h-4 w-4" />
+              <LogIn className="h-3.5 w-3.5" />
               Sign In to Access API Keys
             </Button>
           </div>
         ) : (
-          <div className="rounded-2xl border border-[#1E293B] bg-[#090E18] shadow-sm">
+          <div className="rounded-xl border border-slate-800 bg-[#0D1117] shadow-sm">
             <div className="w-full overflow-visible">
               <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-[#1E293B] bg-[#0C1423]/60 text-slate-400 font-medium">
+                <tr className="border-b border-slate-800 bg-slate-900/40 text-slate-400 font-medium">
                   <th className="py-3 px-4 w-10">
                     <input
                       type="checkbox"
                       checked={filteredKeys.length > 0 && selectedKeyIds.length === filteredKeys.length}
                       onChange={toggleSelectAll}
-                      className="rounded border-[#1E293B] bg-[#0A0F1D] accent-[#00E599] h-3.5 w-3.5 cursor-pointer"
+                      className="rounded border-slate-700 bg-slate-900 accent-white h-3.5 w-3.5 cursor-pointer"
                     />
                   </th>
-                  <th className="py-3 px-4">Key</th>
-                  <th className="py-3 px-4">Expires</th>
-                  <th className="py-3 px-4">Last Used</th>
-                  <th className="py-3 px-4">Usage</th>
-                  <th className="py-3 px-4">Limit</th>
+                  <th className="py-3 px-4 font-medium">Key</th>
+                  <th className="py-3 px-4 font-medium">Expires</th>
+                  <th className="py-3 px-4 font-medium">Last Used</th>
+                  <th className="py-3 px-4 font-medium">Usage</th>
+                  <th className="py-3 px-4 font-medium">Limit</th>
                   <th className="py-3 px-4 w-10 text-right"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#1E293B]/70">
+              <tbody className="divide-y divide-slate-800/60">
                 {filteredKeys.length === 0 ? (
                   <tr>
                     <td colSpan={7} className="py-12 text-center text-slate-500 text-xs">
@@ -401,8 +401,8 @@ export default function DashboardPage() {
                     return (
                       <tr
                         key={key.id}
-                        className={`transition-colors group hover:bg-[#0E1729]/80 ${
-                          isSelected ? "bg-[#0E1D28]/60" : ""
+                        className={`transition-colors group hover:bg-slate-800/40 ${
+                          isSelected ? "bg-slate-800/30" : ""
                         }`}
                       >
                         {/* Checkbox */}
@@ -411,7 +411,7 @@ export default function DashboardPage() {
                             type="checkbox"
                             checked={isSelected}
                             onChange={() => toggleSelectKey(key.id)}
-                            className="rounded border-[#1E293B] bg-[#0A0F1D] accent-[#00E599] h-3.5 w-3.5 cursor-pointer"
+                            className="rounded border-slate-700 bg-slate-900 accent-white h-3.5 w-3.5 cursor-pointer"
                           />
                         </td>
 
@@ -419,9 +419,9 @@ export default function DashboardPage() {
                         <td className="py-3.5 px-4 font-medium">
                           <div className="space-y-0.5">
                             <div className="flex items-center gap-2">
-                              <span className="text-white font-semibold">{key.name}</span>
+                              <span className="text-white font-medium">{key.name}</span>
                               {isSessionActive && (
-                                <Badge className="bg-[#00E599]/10 text-[#00E599] border-[#00E599]/30 font-mono text-[9px] px-1.5 py-0">
+                                <Badge className="bg-emerald-500/10 text-emerald-400 border-emerald-500/20 font-mono text-[9px] px-1.5 py-0">
                                   Active Session
                                 </Badge>
                               )}
@@ -451,7 +451,7 @@ export default function DashboardPage() {
                         <td className="py-3.5 px-4">
                           <div className="flex items-center gap-2 font-mono">
                             <span className="text-slate-300">100req/day</span>
-                            <span className="rounded-full bg-[#162035] text-[9px] font-bold text-slate-300 px-2 py-0.5 border border-[#1E293B]">
+                            <span className="rounded-md bg-slate-800 text-[9px] font-medium text-slate-300 px-1.5 py-0.5 border border-slate-700">
                               {key.limitType}
                             </span>
                           </div>
@@ -464,22 +464,22 @@ export default function DashboardPage() {
                               variant="ghost"
                               size="icon"
                               onClick={() => setActiveMenuId(activeMenuId === key.id ? null : key.id)}
-                              className="h-7 w-7 text-slate-400 hover:text-white hover:bg-[#162035]"
+                              className="h-7 w-7 text-slate-400 hover:text-white hover:bg-slate-800/60 rounded-md"
                             >
                               <MoreVertical className="h-4 w-4" />
                             </Button>
 
                             {/* Dropdown Menu Popup */}
                             {activeMenuId === key.id && (
-                              <div className="absolute right-0 top-8 z-50 w-44 rounded-xl border border-[#1E293B] bg-[#0E1526] p-1.5 shadow-xl font-sans text-xs space-y-1 text-left">
+                              <div className="absolute right-0 top-8 z-50 w-44 rounded-lg border border-slate-800 bg-[#0D1117] p-1.5 shadow-xl font-sans text-xs space-y-0.5 text-left">
                                 <button
                                   onClick={() => {
                                     handleCopyText(key.fullKey || key.prefix);
                                     setActiveMenuId(null);
                                   }}
-                                  className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-slate-300 hover:bg-[#162035] hover:text-white"
+                                  className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-slate-300 hover:bg-slate-800/60 hover:text-white transition-colors"
                                 >
-                                  <Copy className="h-3.5 w-3.5 text-[#00E599]" />
+                                  <Copy className="h-3.5 w-3.5 text-slate-400" />
                                   <span>Copy Key</span>
                                 </button>
 
@@ -493,9 +493,9 @@ export default function DashboardPage() {
                                     }
                                     setActiveMenuId(null);
                                   }}
-                                  className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-slate-300 hover:bg-[#162035] hover:text-white"
+                                  className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-slate-300 hover:bg-slate-800/60 hover:text-white transition-colors"
                                 >
-                                  <KeyRound className="h-3.5 w-3.5 text-blue-400" />
+                                  <KeyRound className="h-3.5 w-3.5 text-slate-400" />
                                   <span>Use for Session</span>
                                 </button>
 
@@ -504,20 +504,20 @@ export default function DashboardPage() {
                                     fetchUsageForPrefix(key.prefix);
                                     setActiveMenuId(null);
                                   }}
-                                  className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-slate-300 hover:bg-[#162035] hover:text-white"
+                                  className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-slate-300 hover:bg-slate-800/60 hover:text-white transition-colors"
                                 >
-                                  <Activity className="h-3.5 w-3.5 text-amber-400" />
+                                  <Activity className="h-3.5 w-3.5 text-slate-400" />
                                   <span>Inspect Usage</span>
                                 </button>
 
-                                <div className="border-t border-[#1C273B] my-1" />
+                                <div className="border-t border-slate-800 my-1" />
 
                                 <button
                                   onClick={() => {
                                     setKeyToRevoke(key);
                                     setActiveMenuId(null);
                                   }}
-                                  className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-red-400 hover:bg-red-500/10"
+                                  className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-md text-red-400 hover:bg-red-500/10 transition-colors"
                                 >
                                   <Trash2 className="h-3.5 w-3.5" />
                                   <span>Revoke Key</span>
@@ -535,7 +535,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Table Footer */}
-          <div className="py-3.5 px-4 border-t border-[#1E293B] bg-[#070C15] text-slate-400 text-xs">
+          <div className="py-3 px-4 border-t border-slate-800 bg-slate-900/30 text-slate-400 text-xs">
             <span>{filteredKeys.length} {filteredKeys.length === 1 ? "key" : "keys"}</span>
           </div>
         </div>
@@ -543,34 +543,34 @@ export default function DashboardPage() {
 
         {/* 4. Live Inspected Usage Details Card (if active) */}
         {inspectedPrefix && usage && (
-          <div className="rounded-2xl border border-[#1E293B] bg-[#0E1526] p-5 space-y-4">
+          <div className="rounded-xl border border-slate-800 bg-[#0D1117] p-5 space-y-4 shadow-sm">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Activity className="h-5 w-5 text-[#00E599]" />
-                <h3 className="font-bold text-white text-sm">Live Usage Inspection ({inspectedPrefix})</h3>
+                <Activity className="h-4 w-4 text-slate-300" />
+                <h3 className="font-semibold text-white text-sm">Live Usage Inspection ({inspectedPrefix})</h3>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setInspectedPrefix(null)}
-                className="text-xs text-slate-400 hover:text-white"
+                className="text-xs text-slate-400 hover:text-white rounded-md"
               >
                 Close
               </Button>
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 font-mono text-xs">
-              <div className="rounded-xl border border-[#1E293B] bg-[#0A0F1D] p-3">
+              <div className="rounded-lg border border-slate-800 bg-slate-900/50 p-3">
                 <span className="text-slate-400 text-[11px]">Requests Today</span>
-                <p className="font-bold text-white text-sm mt-0.5">{usage.requests_today} / {usage.limit}</p>
+                <p className="font-semibold text-white text-sm mt-0.5">{usage.requests_today} / {usage.limit}</p>
               </div>
-              <div className="rounded-xl border border-[#1E293B] bg-[#0A0F1D] p-3">
+              <div className="rounded-lg border border-slate-800 bg-slate-900/50 p-3">
                 <span className="text-slate-400 text-[11px]">Remaining Quota</span>
-                <p className="font-bold text-[#00E599] text-sm mt-0.5">{usage.remaining} remaining</p>
+                <p className="font-semibold text-emerald-400 text-sm mt-0.5">{usage.remaining} remaining</p>
               </div>
-              <div className="rounded-xl border border-[#1E293B] bg-[#0A0F1D] p-3">
+              <div className="rounded-lg border border-slate-800 bg-slate-900/50 p-3">
                 <span className="text-slate-400 text-[11px]">Quota Reset Window</span>
-                <p className="font-bold text-white text-sm mt-0.5">{usage.reset_time}</p>
+                <p className="font-semibold text-white text-sm mt-0.5">{usage.reset_time}</p>
               </div>
             </div>
           </div>
@@ -579,38 +579,38 @@ export default function DashboardPage() {
 
       {/* 5. Create New API Key Modal Dialog */}
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-        <DialogContent className="bg-[#0E1526] border-[#1E293B] text-slate-100 sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="text-base font-bold text-white flex items-center gap-2">
-              <KeyRound className="h-5 w-5 text-[#00E599]" />
+        <DialogContent className="bg-[#0D1117] border-slate-800 text-slate-100 sm:max-w-md rounded-xl p-6 shadow-2xl">
+          <DialogHeader className="space-y-1">
+            <DialogTitle className="text-base font-semibold text-white flex items-center gap-2">
+              <KeyRound className="h-4 w-4 text-slate-300" />
               Create New API Key
             </DialogTitle>
             <DialogDescription className="text-xs text-slate-400">
-              Generates a new stateless X-API-Key for sandboxed code execution payloads.
+              Generates a new secret X-API-Key for sandboxed code execution payloads.
             </DialogDescription>
           </DialogHeader>
 
           {!newlyCreatedKey ? (
             <form onSubmit={handleCreateKeySubmit} className="space-y-4 py-2">
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <label className="text-xs font-medium text-slate-300">Key Name</label>
                 <Input
                   type="text"
                   placeholder="e.g. myra-agent or dev-pipeline"
                   value={newKeyName}
                   onChange={(e) => setNewKeyName(e.target.value)}
-                  className="bg-[#0A0F1D] border-[#1E293B] text-slate-100 text-xs h-9 font-mono"
+                  className="bg-slate-900/60 border-slate-800 text-slate-100 text-xs h-9 font-mono rounded-lg focus-visible:ring-slate-700"
                   autoFocus
                 />
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 <label className="text-xs font-medium text-slate-300">Expiration</label>
                 <Select value={newKeyExpiry} onValueChange={(val) => val && setNewKeyExpiry(val)}>
-                  <SelectTrigger className="w-full bg-[#0A0F1D] border-[#1E293B] text-slate-100 text-xs h-9 font-mono">
+                  <SelectTrigger className="w-full bg-slate-900/60 border-slate-800 text-slate-100 text-xs h-9 font-mono rounded-lg">
                     <SelectValue placeholder="Select Expiration" />
                   </SelectTrigger>
-                  <SelectContent className="bg-[#0E1526] border-[#1E293B] text-slate-100 font-mono text-xs">
+                  <SelectContent className="bg-[#0D1117] border-slate-800 text-slate-100 font-mono text-xs rounded-lg">
                     <SelectItem value="Never">Never</SelectItem>
                     <SelectItem value="24 Hours">24 Hours</SelectItem>
                     <SelectItem value="7 Days">7 Days</SelectItem>
@@ -625,18 +625,18 @@ export default function DashboardPage() {
                   type="button"
                   variant="outline"
                   onClick={() => setIsCreateOpen(false)}
-                  className="border-[#1E293B] text-slate-300 hover:bg-[#162035] text-xs"
+                  className="border-slate-800 text-slate-300 hover:bg-slate-800/60 text-xs rounded-lg"
                 >
                   Cancel
                 </Button>
                 <Button
                   type="submit"
                   disabled={isGenerating}
-                  className="bg-[#00E599] text-slate-950 hover:bg-[#00E599]/90 font-bold text-xs"
+                  className="bg-white text-slate-950 hover:bg-slate-200 font-semibold text-xs rounded-lg"
                 >
                   {isGenerating ? (
                     <>
-                      <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                      <RefreshCw className="mr-2 h-3.5 w-3.5 animate-spin" />
                       Generating...
                     </>
                   ) : (
@@ -647,9 +647,9 @@ export default function DashboardPage() {
             </form>
           ) : (
             <div className="space-y-4 py-2">
-              <Alert className="border-amber-500/30 bg-amber-500/10 text-amber-200">
+              <Alert className="border-amber-500/30 bg-amber-500/10 text-amber-200 rounded-lg">
                 <AlertTriangle className="h-4 w-4 text-amber-400" />
-                <AlertTitle className="text-xs font-bold">Save your API Key now</AlertTitle>
+                <AlertTitle className="text-xs font-semibold">Save your API Key now</AlertTitle>
                 <AlertDescription className="text-xs text-amber-300/80">
                   This secret key will not be displayed again. Please copy and store it securely.
                 </AlertDescription>
@@ -657,23 +657,23 @@ export default function DashboardPage() {
 
               <div className="space-y-1.5">
                 <label className="text-xs font-medium text-slate-400">Secret API Key</label>
-                <div className="flex items-center gap-2 rounded-xl border border-[#1E293B] bg-[#0A0F1D] p-2.5 font-mono text-xs">
+                <div className="flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-900/60 p-2 font-mono text-xs">
                   <input
                     type="text"
                     readOnly
                     value={newlyCreatedKey.full}
-                    className="w-full bg-transparent font-mono text-xs text-slate-100 focus:outline-none"
+                    className="w-full bg-transparent font-mono text-xs text-slate-100 focus:outline-none px-1"
                   />
                   <Button
                     size="icon"
                     variant="ghost"
-                    className="h-7 w-7 shrink-0 text-slate-400 hover:text-white"
+                    className="h-7 w-7 shrink-0 text-slate-400 hover:text-white rounded-md"
                     onClick={() => handleCopyText(newlyCreatedKey.full)}
                   >
                     {copiedKey ? (
-                      <Check className="h-4 w-4 text-[#00E599]" />
+                      <Check className="h-3.5 w-3.5 text-emerald-400" />
                     ) : (
-                      <Copy className="h-4 w-4" />
+                      <Copy className="h-3.5 w-3.5" />
                     )}
                   </Button>
                 </div>
@@ -681,7 +681,7 @@ export default function DashboardPage() {
 
               <DialogFooter className="pt-2 flex gap-2">
                 <Link href="/playground" className="w-full">
-                  <Button size="sm" className="w-full bg-[#00E599] text-slate-950 hover:bg-[#00E599]/90 font-bold text-xs gap-1.5">
+                  <Button size="sm" className="w-full bg-white text-slate-950 hover:bg-slate-200 font-semibold text-xs gap-1.5 rounded-lg">
                     <Play className="h-3.5 w-3.5" />
                     Test in Playground
                   </Button>
@@ -690,7 +690,7 @@ export default function DashboardPage() {
                   variant="outline"
                   size="sm"
                   onClick={() => setIsCreateOpen(false)}
-                  className="border-[#1E293B] text-slate-300 hover:bg-[#162035] text-xs"
+                  className="border-slate-800 text-slate-300 hover:bg-slate-800/60 text-xs rounded-lg"
                 >
                   Done
                 </Button>
@@ -702,9 +702,9 @@ export default function DashboardPage() {
 
       {/* 6. Confirm Revoke Key Alert Dialog */}
       <AlertDialog open={!!keyToRevoke} onOpenChange={(open) => !open && setKeyToRevoke(null)}>
-        <AlertDialogContent className="bg-[#0E1526] border-[#1E293B] text-slate-100 sm:max-w-md">
+        <AlertDialogContent className="bg-[#0D1117] border-slate-800 text-slate-100 sm:max-w-md rounded-xl p-6 shadow-2xl">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-base font-bold text-white">
+            <AlertDialogTitle className="text-base font-semibold text-white">
               Revoke API Key &quot;{keyToRevoke?.name}&quot;?
             </AlertDialogTitle>
             <AlertDialogDescription className="text-xs text-slate-400">
@@ -712,13 +712,13 @@ export default function DashboardPage() {
               <code className="font-mono text-slate-200">{keyToRevoke?.prefix}</code> will be rejected with HTTP 401.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel className="border-[#1E293B] text-slate-300 hover:bg-[#162035] text-xs">
+          <AlertDialogFooter className="pt-2">
+            <AlertDialogCancel className="border-slate-800 text-slate-300 hover:bg-slate-800/60 text-xs rounded-lg">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirmRevoke}
-              className="bg-red-600 hover:bg-red-700 text-white font-semibold text-xs"
+              className="bg-red-600 hover:bg-red-700 text-white font-semibold text-xs rounded-lg"
             >
               Confirm Revocation
             </AlertDialogAction>

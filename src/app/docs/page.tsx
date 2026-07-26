@@ -126,29 +126,29 @@ async function executeCode() {
 executeCode();`;
 
   return (
-    <div className="min-h-screen bg-[#070A12] text-slate-100 font-sans antialiased">
+    <div className="min-h-screen bg-[#0B0F17] text-slate-100 font-sans antialiased">
       {/* Main 3-Column Docs Grid Layout */}
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
         <div className="grid gap-10 lg:grid-cols-12">
           {/* Left Navigation Sidebar */}
           <aside className="lg:col-span-3">
-            <div className="sticky top-20 space-y-7">
+            <div className="sticky top-20 space-y-6">
               {/* Top Quick Link Button */}
               <Link
                 href="/playground"
-                className="flex items-center gap-2.5 rounded-xl bg-[#121A2B] px-4 py-2.5 text-sm font-medium text-slate-300 border border-[#1E2A3F] transition-all hover:bg-[#18233A] hover:text-white"
+                className="flex items-center gap-2.5 rounded-lg bg-slate-900/60 px-3.5 py-2 text-xs font-medium text-slate-300 border border-slate-800 transition-colors hover:bg-slate-800/60 hover:text-white"
               >
-                <Play className="h-4 w-4 text-[#00E599]" />
+                <Play className="h-3.5 w-3.5 text-slate-400" />
                 <span>Try Live Playground</span>
               </Link>
 
               {/* Sidebar Group Items */}
               {sidebarGroups.map((group) => (
                 <div key={group.title} className="space-y-2">
-                  <h3 className="text-sm font-semibold text-slate-400 tracking-tight px-1">
+                  <h3 className="text-xs font-semibold text-slate-400 tracking-tight px-1 uppercase text-[11px]">
                     {group.title}
                   </h3>
-                  <nav className="space-y-1 text-base">
+                  <nav className="space-y-0.5 text-xs">
                     {group.items.map((item) => {
                       const Icon = item.icon;
                       const isSelected = activeSection === item.id;
@@ -157,13 +157,13 @@ executeCode();`;
                           key={item.id}
                           href={`#${item.id}`}
                           onClick={() => setActiveSection(item.id)}
-                          className={`flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium transition-all ${
+                          className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
                             isSelected
-                              ? "bg-[#0E2822] text-[#00E599] font-semibold border border-[#133E35]"
-                              : "text-slate-400 hover:bg-[#0E1524] hover:text-slate-200"
+                              ? "bg-slate-800 text-white font-semibold"
+                              : "text-slate-400 hover:bg-slate-800/50 hover:text-slate-200"
                           }`}
                         >
-                          <Icon className={`h-4 w-4 shrink-0 ${isSelected ? "text-[#00E599]" : "text-slate-400"}`} />
+                          <Icon className={`h-3.5 w-3.5 shrink-0 ${isSelected ? "text-white" : "text-slate-400"}`} />
                           <span>{item.title}</span>
                         </a>
                       );
@@ -175,85 +175,85 @@ executeCode();`;
           </aside>
 
           {/* Center Main Content Area */}
-          <main className="space-y-12 lg:col-span-6">
+          <main className="space-y-10 lg:col-span-6">
             {/* Document Header Title Section */}
-            <div className="space-y-2.5">
-              <div className="text-sm font-medium text-[#00E599] flex items-center gap-1.5">
-                <span>CodeEngine setup</span>
+            <div className="space-y-2">
+              <div className="text-xs font-medium text-slate-400 flex items-center gap-1.5">
+                <span>CodeEngine Docs</span>
               </div>
-              <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
+              <h1 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
                 Getting started
               </h1>
-              <p className="text-base text-slate-400 leading-relaxed max-w-2xl">
+              <p className="text-xs text-slate-400 leading-relaxed max-w-2xl">
                 Set up your CodeEngine API integration environment and execute your first sandboxed program asynchronously.
               </p>
             </div>
 
             {/* Feature Cards Section: "Here's what we will cover" */}
-            <div className="space-y-4 pt-2">
-              <h2 className="text-2xl font-bold text-white tracking-tight">
+            <div className="space-y-3 pt-2">
+              <h2 className="text-lg font-semibold text-white tracking-tight">
                 Here&apos;s what we will cover
               </h2>
-              <p className="text-sm text-slate-400 leading-relaxed">
+              <p className="text-xs text-slate-400 leading-relaxed">
                 In this guide, you&apos;ll set up everything needed to submit code payloads, authenticate requests, and stream real-time output.
               </p>
 
               {/* 3-Column Card Grid */}
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <div className="rounded-2xl border border-[#1E293B] bg-[#0E1526] p-5 space-y-2 hover:border-[#2A3952] transition-all">
-                  <div className="text-[#00E599]">
-                    <Key className="h-6 w-6 stroke-[1.75]" />
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <div className="rounded-xl border border-slate-800 bg-[#0D1117] p-4 space-y-1.5 shadow-sm">
+                  <div className="text-slate-400">
+                    <Key className="h-5 w-5" />
                   </div>
-                  <h3 className="font-bold text-white text-base pt-1">What is CodeEngine</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed">
-                    Understanding sandboxed code execution platform basics
+                  <h3 className="font-semibold text-white text-sm">Platform Core</h3>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Sandboxed execution platform basics
                   </p>
                 </div>
 
-                <div className="rounded-2xl border border-[#1E293B] bg-[#0E1526] p-5 space-y-2 hover:border-[#2A3952] transition-all">
-                  <div className="text-[#00E599]">
-                    <Download className="h-6 w-6 stroke-[1.75]" />
+                <div className="rounded-xl border border-slate-800 bg-[#0D1117] p-4 space-y-1.5 shadow-sm">
+                  <div className="text-slate-400">
+                    <Download className="h-5 w-5" />
                   </div>
-                  <h3 className="font-bold text-white text-base pt-1">Get API Keys</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed">
-                    Generate your stateless execution tokens on dashboard
+                  <h3 className="font-semibold text-white text-sm">Get API Keys</h3>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Generate secret execution tokens
                   </p>
                 </div>
 
-                <div className="rounded-2xl border border-[#1E293B] bg-[#0E1526] p-5 space-y-2 hover:border-[#2A3952] transition-all">
-                  <div className="text-[#00E599]">
-                    <Play className="h-6 w-6 stroke-[1.75]" />
+                <div className="rounded-xl border border-slate-800 bg-[#0D1117] p-4 space-y-1.5 shadow-sm">
+                  <div className="text-slate-400">
+                    <Play className="h-5 w-5" />
                   </div>
-                  <h3 className="font-bold text-white text-base pt-1">First program</h3>
-                  <p className="text-sm text-slate-400 leading-relaxed">
-                    Submit code payload and receive live stream response
+                  <h3 className="font-semibold text-white text-sm">First Payload</h3>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    Submit code payload and receive SSE stream
                   </p>
                 </div>
               </div>
             </div>
 
             {/* Section 1: Quick Start */}
-            <section id="quickstart" className="space-y-4 scroll-mt-32 pt-6 border-t border-[#1A2333]">
+            <section id="quickstart" className="space-y-3 scroll-mt-32 pt-6 border-t border-slate-800">
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-bold text-white tracking-tight">Quick Start</h2>
-                <Badge variant="outline" className="font-mono text-[11px] border-[#00E599]/30 text-[#00E599] bg-[#00E599]/10">cURL</Badge>
+                <h2 className="text-lg font-semibold text-white tracking-tight">Quick Start</h2>
+                <Badge variant="outline" className="font-mono text-[11px] border-slate-700 text-slate-300 bg-slate-800/60 rounded-md">cURL</Badge>
               </div>
               <p className="text-xs text-slate-400 leading-relaxed">
                 Submit a code payload to the CodeEngine API using cURL. Replace{" "}
-                <code className="font-mono text-slate-200 bg-[#162032] px-1.5 py-0.5 rounded border border-[#24334E]">YOUR_API_KEY</code> with a key generated on the dashboard.
+                <code className="font-mono text-slate-200 bg-slate-900 px-1.5 py-0.5 rounded border border-slate-800">YOUR_API_KEY</code> with a key generated on the dashboard.
               </p>
 
-              <div className="relative rounded-2xl border border-[#1E293B] bg-[#0A0F1D] p-4 font-mono text-xs text-slate-100 shadow-inner">
+              <div className="relative rounded-xl border border-slate-800 bg-[#070A10] p-4 font-mono text-xs text-slate-100 shadow-inner">
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="absolute right-3 top-3 h-7 w-7 text-slate-400 hover:text-white"
+                  className="absolute right-3 top-3 h-7 w-7 text-slate-400 hover:text-white rounded-md"
                   onClick={() => handleCopy("quickstart", quickstartCurl)}
                 >
                   {copiedId === "quickstart" ? (
-                    <Check className="h-4 w-4 text-[#00E599]" />
+                    <Check className="h-3.5 w-3.5 text-emerald-400" />
                   ) : (
-                    <Copy className="h-4 w-4" />
+                    <Copy className="h-3.5 w-3.5" />
                   )}
                 </Button>
                 <pre className="overflow-x-auto whitespace-pre leading-relaxed text-slate-300">{quickstartCurl}</pre>
@@ -261,32 +261,32 @@ executeCode();`;
             </section>
 
             {/* Section 2: Authentication */}
-            <section id="authentication" className="space-y-4 scroll-mt-32 pt-6 border-t border-[#1A2333]">
-              <h2 className="text-xl font-bold text-white tracking-tight">Authentication</h2>
+            <section id="authentication" className="space-y-3 scroll-mt-32 pt-6 border-t border-slate-800">
+              <h2 className="text-lg font-semibold text-white tracking-tight">Authentication</h2>
               <p className="text-xs text-slate-400 leading-relaxed">
                 All requests to protected execution endpoints require an API key passed via HTTP Header or query parameter:
               </p>
 
-              <div className="rounded-2xl border border-[#1E293B] bg-[#0E1526] p-4 text-xs space-y-3 font-mono">
-                <div className="flex items-center justify-between border-b border-[#1C273B] pb-2">
+              <div className="rounded-xl border border-slate-800 bg-[#0D1117] p-4 text-xs space-y-2.5 font-mono shadow-sm">
+                <div className="flex items-center justify-between border-b border-slate-800 pb-2">
                   <span className="text-slate-400">Header Name:</span>
-                  <code className="font-bold text-white">X-API-Key</code>
+                  <code className="font-semibold text-white">X-API-Key</code>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-slate-400">Query Parameter (for SSE):</span>
-                  <code className="text-[#00E599]">?api_key=ce_...</code>
+                  <code className="text-emerald-400">?api_key=ce_...</code>
                 </div>
               </div>
             </section>
 
             {/* Section 3: Rate Limits */}
-            <section id="rate-limits" className="space-y-4 scroll-mt-32 pt-6 border-t border-[#1A2333]">
-              <h2 className="text-xl font-bold text-white tracking-tight">Rate Limits</h2>
+            <section id="rate-limits" className="space-y-3 scroll-mt-32 pt-6 border-t border-slate-800">
+              <h2 className="text-lg font-semibold text-white tracking-tight">Rate Limits</h2>
               <p className="text-xs text-slate-400 leading-relaxed">
                 Every API key is provisioned with a flat quota of <strong>100 requests per day</strong>. Counters reset automatically 24 hours after key creation.
               </p>
 
-              <div className="rounded-2xl border border-[#1E293B] bg-[#0A0F1D] p-4 font-mono text-xs text-red-400">
+              <div className="rounded-xl border border-slate-800 bg-[#070A10] p-4 font-mono text-xs text-red-400">
                 <pre>{`{
   "error": "Rate limit exceeded",
   "limit": 100,
@@ -298,11 +298,11 @@ executeCode();`;
             </section>
 
             {/* Section 4: POST /submit */}
-            <section id="submit" className="space-y-4 scroll-mt-32 pt-6 border-t border-[#1A2333]">
+            <section id="submit" className="space-y-3 scroll-mt-32 pt-6 border-t border-slate-800">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Badge className="font-mono text-xs bg-[#00E599] text-slate-950 font-bold">POST</Badge>
-                  <h2 className="text-xl font-bold text-white tracking-tight">/submit</h2>
+                  <Badge className="font-mono text-xs bg-white text-slate-950 font-semibold rounded-md">POST</Badge>
+                  <h2 className="text-lg font-semibold text-white tracking-tight">/submit</h2>
                 </div>
                 <span className="text-xs text-slate-400 font-mono">Submit Execution Payload</span>
               </div>
@@ -313,11 +313,11 @@ executeCode();`;
             </section>
 
             {/* Section 5: GET /stream/:id */}
-            <section id="stream" className="space-y-4 scroll-mt-32 pt-6 border-t border-[#1A2333]">
+            <section id="stream" className="space-y-3 scroll-mt-32 pt-6 border-t border-slate-800">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Badge className="font-mono text-xs bg-blue-500 text-white font-bold">GET</Badge>
-                  <h2 className="text-xl font-bold text-white tracking-tight">/stream/:submission_id</h2>
+                  <Badge className="font-mono text-xs bg-slate-800 text-slate-200 font-semibold rounded-md border border-slate-700">GET</Badge>
+                  <h2 className="text-lg font-semibold text-white tracking-tight">/stream/:submission_id</h2>
                 </div>
                 <span className="text-xs text-slate-400 font-mono">Server-Sent Events (SSE)</span>
               </div>
@@ -328,36 +328,36 @@ executeCode();`;
             </section>
 
             {/* Section 6: Execution Constraints */}
-            <section id="constraints" className="space-y-4 scroll-mt-32 pt-6 border-t border-[#1A2333]">
-              <h2 className="text-xl font-bold text-white tracking-tight">Execution Constraints</h2>
+            <section id="constraints" className="space-y-3 scroll-mt-32 pt-6 border-t border-slate-800">
+              <h2 className="text-lg font-semibold text-white tracking-tight">Execution Constraints</h2>
 
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 text-xs">
-                <div className="rounded-2xl border border-[#1E293B] bg-[#0E1526] p-4 space-y-1">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 text-xs">
+                <div className="rounded-xl border border-slate-800 bg-[#0D1117] p-4 space-y-1 shadow-sm">
                   <span className="text-slate-400 text-[11px]">Timeout Boundary</span>
-                  <p className="font-bold text-white text-sm">7 Seconds Hard Limit</p>
+                  <p className="font-semibold text-white text-sm">7 Seconds Hard Limit</p>
                 </div>
-                <div className="rounded-2xl border border-[#1E293B] bg-[#0E1526] p-4 space-y-1">
+                <div className="rounded-xl border border-slate-800 bg-[#0D1117] p-4 space-y-1 shadow-sm">
                   <span className="text-slate-400 text-[11px]">RAM Allocation</span>
-                  <p className="font-bold text-white text-sm">256 MB Max RAM</p>
+                  <p className="font-semibold text-white text-sm">256 MB Max RAM</p>
                 </div>
               </div>
             </section>
 
             {/* Section 7: JavaScript Example */}
-            <section id="examples" className="space-y-4 scroll-mt-32 pt-6 border-t border-[#1A2333]">
-              <h2 className="text-xl font-bold text-white tracking-tight">JavaScript SDK Integration</h2>
+            <section id="examples" className="space-y-3 scroll-mt-32 pt-6 border-t border-slate-800">
+              <h2 className="text-lg font-semibold text-white tracking-tight">JavaScript SDK Integration</h2>
 
-              <div className="relative rounded-2xl border border-[#1E293B] bg-[#0A0F1D] p-4 font-mono text-xs text-slate-100">
+              <div className="relative rounded-xl border border-slate-800 bg-[#070A10] p-4 font-mono text-xs text-slate-100">
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="absolute right-3 top-3 h-7 w-7 text-slate-400 hover:text-white"
+                  className="absolute right-3 top-3 h-7 w-7 text-slate-400 hover:text-white rounded-md"
                   onClick={() => handleCopy("jsexample", jsExample)}
                 >
                   {copiedId === "jsexample" ? (
-                    <Check className="h-4 w-4 text-[#00E599]" />
+                    <Check className="h-3.5 w-3.5 text-emerald-400" />
                   ) : (
-                    <Copy className="h-4 w-4" />
+                    <Copy className="h-3.5 w-3.5" />
                   )}
                 </Button>
                 <pre className="overflow-x-auto whitespace-pre leading-relaxed text-slate-300">{jsExample}</pre>
@@ -365,29 +365,29 @@ executeCode();`;
             </section>
 
             {/* "Ready to begin?" Bottom Wide Card */}
-            <div className="space-y-4 pt-4">
-              <h2 className="text-xl font-bold text-white tracking-tight">
+            <div className="space-y-3 pt-4">
+              <h2 className="text-lg font-semibold text-white tracking-tight">
                 Ready to begin?
               </h2>
 
-              <div className="rounded-2xl border border-[#1E293B] bg-[#0E1526] p-6 space-y-3 hover:border-[#00E599]/40 transition-all">
-                <div className="text-[#00E599]">
-                  <ArrowRight className="h-6 w-6" />
+              <div className="rounded-xl border border-slate-800 bg-[#0D1117] p-6 space-y-3 shadow-sm">
+                <div className="text-slate-300">
+                  <ArrowRight className="h-5 w-5" />
                 </div>
                 <div className="space-y-1">
-                  <h3 className="font-bold text-white text-base">Start with Playground</h3>
+                  <h3 className="font-semibold text-white text-sm">Start with Playground</h3>
                   <p className="text-xs text-slate-400 leading-relaxed">
                     Test Python, C++, and Node.js code submissions live in your browser sandbox.
                   </p>
                 </div>
                 <div className="pt-2 flex gap-3">
                   <Link href="/playground">
-                    <Button size="sm" className="bg-[#00E599] text-slate-950 hover:bg-[#00E599]/90 font-bold text-xs">
+                    <Button size="sm" className="bg-white text-slate-950 hover:bg-slate-200 font-semibold text-xs rounded-lg">
                       Open Playground
                     </Button>
                   </Link>
                   <Link href="/">
-                    <Button size="sm" variant="outline" className="border-[#1E293B] text-slate-300 hover:bg-[#162032] text-xs">
+                    <Button size="sm" variant="outline" className="border-slate-800 text-slate-300 hover:bg-slate-800/60 text-xs rounded-lg">
                       Generate API Key
                     </Button>
                   </Link>
@@ -404,15 +404,15 @@ executeCode();`;
                 <span>On this page</span>
               </div>
 
-              <nav className="space-y-1 text-xs">
+              <nav className="space-y-0.5 text-xs">
                 {tocItems.map((item) => (
                   <a
                     key={item.id}
                     href={`#${item.id}`}
                     onClick={() => setActiveSection(item.id)}
-                    className={`block py-1.5 px-2 rounded-lg transition-colors ${
+                    className={`block py-1.5 px-2 rounded-md transition-colors ${
                       activeSection === item.id
-                        ? "text-[#00E599] font-medium"
+                        ? "text-white font-medium bg-slate-800/60"
                         : "text-slate-400 hover:text-slate-200"
                     }`}
                   >

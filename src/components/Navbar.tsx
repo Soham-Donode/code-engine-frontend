@@ -36,22 +36,22 @@ export function Navbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-[#1A2333] bg-[#090D16]/90 backdrop-blur">
+    <header className="sticky top-0 z-50 w-full border-b border-slate-800/80 bg-[#0B0F17]/95 backdrop-blur-sm">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6">
         {/* Brand */}
         <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-2.5 text-sm font-semibold tracking-tight text-white transition-colors hover:text-[#00E599]">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#00E599]/10 text-[#00E599] border border-[#00E599]/20">
+          <Link href="/" className="flex items-center gap-2.5 text-sm font-semibold tracking-tight text-white transition-colors hover:text-slate-200">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-800/80 text-white border border-slate-700/60">
               <Cpu className="h-4 w-4" />
             </div>
-            <span className="font-bold">CodeEngine</span>
-            <span className="rounded-md bg-[#162035] px-1.5 py-0.5 text-[10px] font-mono font-medium text-slate-400 border border-[#1E293B]">
+            <span className="font-semibold tracking-tight">CodeEngine</span>
+            <span className="rounded-md bg-slate-800/60 px-1.5 py-0.5 text-[10px] font-mono font-medium text-slate-400 border border-slate-700/50">
               v1.0
             </span>
           </Link>
 
           {/* Navigation Links */}
-          <nav className="flex items-center gap-1.5">
+          <nav className="flex items-center gap-1">
             {navLinks.map((link) => {
               const Icon = link.icon;
               const isActive = pathname === link.href;
@@ -59,13 +59,13 @@ export function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`flex items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-medium transition-all ${
+                  className={`flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
                     isActive
-                      ? "bg-[#0E2822] text-[#00E599] border border-[#133E35] font-semibold"
-                      : "text-slate-400 hover:bg-[#0E1524] hover:text-slate-200"
+                      ? "bg-slate-800 text-white font-semibold"
+                      : "text-slate-400 hover:bg-slate-800/50 hover:text-slate-200"
                   }`}
                 >
-                  <Icon className={`h-3.5 w-3.5 ${isActive ? "text-[#00E599]" : "text-slate-400"}`} />
+                  <Icon className={`h-3.5 w-3.5 ${isActive ? "text-white" : "text-slate-400"}`} />
                   <span>{link.label}</span>
                 </Link>
               );
@@ -77,14 +77,14 @@ export function Navbar() {
         <div className="flex items-center gap-3">
           {/* Active Session Key indicator */}
           {apiKey ? (
-            <div className="hidden sm:flex items-center gap-2 border border-[#00E599]/30 bg-[#00E599]/10 px-3 py-1 rounded-xl text-xs font-mono text-[#00E599]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#00E599] animate-pulse" />
+            <div className="hidden sm:flex items-center gap-2 border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 rounded-lg text-xs font-mono text-emerald-400">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
               <span className="text-[11px] font-medium text-slate-400">Active:</span>
               <span>{keyPrefix ? `${keyPrefix}...` : "Key Active"}</span>
             </div>
           ) : (
-            <div className="hidden sm:flex items-center gap-2 border border-[#1E293B] bg-[#0E1526] px-3 py-1 rounded-xl text-xs font-mono text-slate-400">
-              <span className="h-1.5 w-1.5 rounded-full bg-amber-500/80" />
+            <div className="hidden sm:flex items-center gap-2 border border-slate-800 bg-slate-900/60 px-2.5 py-1 rounded-lg text-xs font-mono text-slate-400">
+              <span className="h-1.5 w-1.5 rounded-full bg-slate-500" />
               <span className="text-[11px]">No Active Key</span>
             </div>
           )}
@@ -92,15 +92,15 @@ export function Navbar() {
           {/* Auth Status & Sign In Button */}
           {user ? (
             <div className="flex items-center gap-2">
-              <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-xl border border-[#1E293B] bg-[#0E1526] text-xs font-mono text-slate-300">
-                <UserIcon className="h-3.5 w-3.5 text-[#00E599]" />
+              <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-slate-800 bg-slate-900/60 text-xs font-mono text-slate-300">
+                <UserIcon className="h-3.5 w-3.5 text-slate-400" />
                 <span className="max-w-[120px] truncate">{user.email}</span>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleSignOut}
-                className="h-8 text-xs text-slate-400 hover:text-white hover:bg-[#162035] gap-1 px-2.5"
+                className="h-8 text-xs text-slate-400 hover:text-white hover:bg-slate-800/60 gap-1 px-2.5 rounded-lg"
                 title="Sign Out"
               >
                 <LogOut className="h-3.5 w-3.5" />
@@ -111,7 +111,7 @@ export function Navbar() {
             <Button
               size="sm"
               onClick={() => setAuthModalOpen(true)}
-              className="h-8 bg-[#00E599] text-slate-950 hover:bg-[#00E599]/90 font-bold text-xs gap-1.5 px-3 rounded-xl"
+              className="h-8 bg-white text-slate-950 hover:bg-slate-200 font-semibold text-xs gap-1.5 px-3 rounded-lg"
             >
               <LogIn className="h-3.5 w-3.5" />
               Sign In
@@ -123,12 +123,12 @@ export function Navbar() {
             <Button
               variant="outline"
               size="icon"
-              className="h-8 w-8 border-[#1E293B] bg-[#0E1526] text-slate-400 hover:text-white hover:bg-[#162035]"
+              className="h-8 w-8 border-slate-800 bg-slate-900/60 text-slate-400 hover:text-white hover:bg-slate-800/60 rounded-lg"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               aria-label="Toggle theme"
             >
               {theme === "dark" ? (
-                <Sun className="h-4 w-4 text-[#00E599]" />
+                <Sun className="h-4 w-4 text-slate-300" />
               ) : (
                 <Moon className="h-4 w-4" />
               )}

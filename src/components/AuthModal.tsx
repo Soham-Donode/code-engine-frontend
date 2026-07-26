@@ -23,6 +23,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
   const { signInWithGoogle, signInWithEmail, signUpWithEmail, isConfigured } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleGoogleSignIn = async () => {
@@ -34,26 +35,16 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
     }
   };
 
-  const handleEmailSignIn = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) return;
     setIsLoading(true);
     try {
-      await signInWithEmail(email, password);
-      onOpenChange(false);
-    } catch {
-      // toast shown in AuthContext
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleEmailSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email || !password) return;
-    setIsLoading(true);
-    try {
-      await signUpWithEmail(email, password);
+      if (mode === "signin") {
+        await signInWithEmail(email, password);
+      } else {
+        await signUpWithEmail(email, password);
+      }
       onOpenChange(false);
     } catch {
       // toast shown in AuthContext
@@ -64,36 +55,34 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-[#0E1526] border-[#1E293B] text-slate-100 sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-base font-bold text-white flex items-center gap-2">
-            <LogIn className="h-5 w-5 text-[#00E599]" />
-            Account Authentication
+      <DialogContent className="bg-white border-none text-slate-900 sm:max-w-[400px] rounded-[24px] p-8 shadow-2xl [&>button]:top-6 [&>button]:right-6 [&>button]:text-slate-500 [&>button]:hover:text-slate-900">
+        <DialogHeader className="space-y-2 text-center items-center pb-2">
+          <DialogTitle className="text-2xl font-medium tracking-tight text-slate-900">
+            {mode === "signin" ? "Log in or sign up" : "Create your account"}
           </DialogTitle>
-          <DialogDescription className="text-xs text-slate-400">
-            Sign in to store and isolate your API keys per account in Supabase.
+          <DialogDescription className="text-sm text-slate-600 max-w-[280px] leading-snug">
+            You’ll get smarter responses and can upload files, images, and more.
           </DialogDescription>
         </DialogHeader>
 
         {!isConfigured && (
-          <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-300">
-            <p className="font-semibold text-amber-200">Supabase Setup Required</p>
+          <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800">
+            <p className="font-semibold text-amber-900">Supabase Setup Required</p>
             <p className="mt-1 text-[11px] opacity-90">
-              Please add <code>NEXT_PUBLIC_SUPABASE_URL</code> and <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> to <code>.env.local</code> to enable live Supabase Auth.
+              Please add <code>NEXT_PUBLIC_SUPABASE_URL</code> and <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> to <code>.env.local</code>.
             </p>
           </div>
         )}
 
-        <div className="space-y-4 py-2">
+        <div className="space-y-4 pt-2">
           {/* Google Sign In Button */}
-          <Button
+          <button
             type="button"
-            variant="outline"
             onClick={handleGoogleSignIn}
             disabled={isLoading}
-            className="w-full bg-[#0A0F1D] border-[#1E293B] hover:bg-[#162035] text-slate-200 text-xs font-semibold h-10 gap-2.5"
+            className="w-full flex items-center justify-center gap-3 h-[48px] rounded-full border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 font-medium text-sm transition-colors shadow-sm disabled:opacity-50"
           >
-            <svg className="h-4 w-4" viewBox="0 0 24 24">
+            <svg className="h-5 w-5" viewBox="0 0 24 24">
               <path
                 fill="#4285F4"
                 d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -112,112 +101,62 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
               />
             </svg>
             Continue with Google
-          </Button>
+          </button>
 
-          <div className="relative flex items-center justify-center">
-            <div className="w-full border-t border-[#1E293B]" />
-            <span className="bg-[#0E1526] px-2.5 text-[11px] text-slate-500 uppercase tracking-wider">
-              Or with Gmail / Email
+          <div className="relative flex items-center justify-center my-6">
+            <div className="w-full border-t border-slate-200" />
+            <span className="absolute bg-white px-3 text-[11px] font-medium text-slate-400 uppercase tracking-wider">
+              OR
             </span>
           </div>
 
-          <Tabs defaultValue="signin" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 bg-[#0A0F1D] p-1 border border-[#1E293B]">
-              <TabsTrigger value="signin" className="text-xs font-semibold data-[state=active]:bg-[#162035] data-[state=active]:text-[#00E599]">
-                Sign In
-              </TabsTrigger>
-              <TabsTrigger value="signup" className="text-xs font-semibold data-[state=active]:bg-[#162035] data-[state=active]:text-[#00E599]">
-                Register
-              </TabsTrigger>
-            </TabsList>
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <div>
+              <input
+                type="email"
+                placeholder="Email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full h-[50px] px-5 rounded-full border border-slate-300 text-slate-900 placeholder:text-slate-400 text-sm focus:outline-none focus:border-slate-800 transition-colors"
+                required
+              />
+            </div>
 
-            {/* Sign In Form */}
-            <TabsContent value="signin" className="space-y-3 pt-3">
-              <form onSubmit={handleEmailSignIn} className="space-y-3">
-                <div className="space-y-1.5">
-                  <label className="text-xs text-slate-400">Email Address</label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
-                    <Input
-                      type="email"
-                      placeholder="you@gmail.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="pl-9 bg-[#0A0F1D] border-[#1E293B] text-slate-100 text-xs h-9 font-mono"
-                      required
-                    />
-                  </div>
-                </div>
+            <div>
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full h-[50px] px-5 rounded-full border border-slate-300 text-slate-900 placeholder:text-slate-400 text-sm focus:outline-none focus:border-slate-800 transition-colors"
+                required
+              />
+            </div>
 
-                <div className="space-y-1.5">
-                  <label className="text-xs text-slate-400">Password</label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
-                    <Input
-                      type="password"
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="pl-9 bg-[#0A0F1D] border-[#1E293B] text-slate-100 text-xs h-9 font-mono"
-                      required
-                    />
-                  </div>
-                </div>
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full h-[48px] mt-2 rounded-full bg-slate-950 hover:bg-slate-800 text-white font-medium text-sm transition-colors flex items-center justify-center disabled:opacity-50"
+            >
+              {isLoading ? (
+                <Loader2 className="h-5 w-5 animate-spin" />
+              ) : (
+                "Continue"
+              )}
+            </button>
+          </form>
 
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full bg-[#00E599] text-slate-950 hover:bg-[#00E599]/90 font-bold text-xs h-9 mt-1"
-                >
-                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Sign In"}
-                </Button>
-              </form>
-            </TabsContent>
-
-            {/* Sign Up Form */}
-            <TabsContent value="signup" className="space-y-3 pt-3">
-              <form onSubmit={handleEmailSignUp} className="space-y-3">
-                <div className="space-y-1.5">
-                  <label className="text-xs text-slate-400">Email Address</label>
-                  <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
-                    <Input
-                      type="email"
-                      placeholder="you@gmail.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="pl-9 bg-[#0A0F1D] border-[#1E293B] text-slate-100 text-xs h-9 font-mono"
-                      required
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <label className="text-xs text-slate-400">Create Password</label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
-                    <Input
-                      type="password"
-                      placeholder="At least 6 characters"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="pl-9 bg-[#0A0F1D] border-[#1E293B] text-slate-100 text-xs h-9 font-mono"
-                      minLength={6}
-                      required
-                    />
-                  </div>
-                </div>
-
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className="w-full bg-[#00E599] text-slate-950 hover:bg-[#00E599]/90 font-bold text-xs h-9 mt-1"
-                >
-                  {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Create Account"}
-                </Button>
-              </form>
-            </TabsContent>
-          </Tabs>
+          <div className="text-center pt-2">
+            <button
+              type="button"
+              onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
+              className="text-xs text-slate-500 hover:text-slate-900 hover:underline"
+            >
+              {mode === "signin"
+                ? "Don't have an account? Sign up"
+                : "Already have an account? Log in"}
+            </button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
