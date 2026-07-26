@@ -37,52 +37,64 @@ export function Navbar() {
     { href: "/docs", label: "API Reference" },
   ];
 
-  // On landing page: absolute + transparent so it floats over the hero image
-  // On inner pages: sticky + semi-opaque backdrop so it stays at the top
   const headerClasses = isLanding
-    ? "absolute top-0 left-0 right-0 z-50 bg-transparent"
-    : "sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md";
+    ? "absolute top-0 left-0 right-0 z-50 bg-transparent transition-all duration-700 ease-out"
+    : "sticky top-0 z-50 w-full bg-card/90 backdrop-blur-xl border-b border-border shadow-sm transition-all duration-700 ease-out";
 
   return (
     <header className={headerClasses}>
-      {/* Absolute positioning container for true centering */}
-      <div className="relative flex items-center justify-between px-6 pt-6 pb-2 sm:px-10 min-h-[64px]">
-        {/* Left Side: Brand Logo */}
-        <div className="flex items-center gap-2.5 z-10">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className={`flex h-8 w-8 items-center justify-center rounded-xl shadow-md ${
-              isLanding ? "bg-slate-900 text-white" : "bg-foreground text-background"
-            }`}>
+      {/* Inner flex container constrained to max-w-7xl matching all pages */}
+      <div
+        className={`mx-auto flex items-center justify-between transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] max-w-7xl ${
+          isLanding
+            ? "bg-transparent border-transparent shadow-none px-6 pt-6 pb-2 sm:px-10"
+            : "px-4 py-3 sm:px-6"
+        }`}
+      >
+        {/* Brand Logo */}
+        <div className="flex items-center gap-2.5">
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <div
+              className={`flex h-8 w-8 items-center justify-center rounded-xl transition-all duration-500 shadow-md ${
+                isLanding
+                  ? "bg-slate-900 text-white group-hover:scale-105"
+                  : "bg-foreground text-background group-hover:scale-105"
+              }`}
+            >
               <Zap className="h-4 w-4 fill-current" />
             </div>
-            <span className={`text-lg font-bold tracking-tight ${
-              isLanding ? "text-slate-900" : "text-foreground"
-            }`}>
+            <span
+              className={`text-lg font-bold tracking-tight transition-colors duration-500 ${
+                isLanding ? "text-slate-900" : "text-foreground"
+              }`}
+            >
               CodeEngine
             </span>
           </Link>
         </div>
 
-        {/* Center: Absolutely Centered Floating Squircle Navigation */}
-        <div className={`absolute left-1/2 -translate-x-1/2 top-6 z-20 hidden md:flex items-center gap-1.5 backdrop-blur-md p-1.5 rounded-2xl border shadow-lg text-xs font-medium ${
-          isLanding
-            ? "bg-white/90 border-white/80 text-slate-700"
-            : "bg-card/90 border-border text-muted-foreground"
-        }`}>
+        {/* Floating / Integrated Center Links */}
+        <div
+          className={`flex items-center gap-1.5 transition-all duration-500 rounded-xl ${
+            isLanding
+              ? "bg-white/90 backdrop-blur-md p-1.5 rounded-2xl border border-white/80 shadow-lg"
+              : "bg-muted/40 p-1 rounded-xl"
+          }`}
+        >
           {navLinks.map((link) => {
             const isActive = pathname === link.href;
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`px-4 py-2 rounded-xl transition-all duration-200 ${
+                className={`px-4 py-1.5 rounded-xl text-xs font-medium transition-all duration-300 ${
                   isActive
                     ? isLanding
-                      ? "bg-slate-900/10 dark:bg-white/20 backdrop-blur-md text-slate-950 font-semibold border border-slate-900/15 dark:border-white/30 shadow-inner"
-                      : "bg-foreground/10 dark:bg-white/15 backdrop-blur-md text-foreground font-semibold border border-foreground/15 dark:border-white/20 shadow-sm"
+                      ? "bg-slate-900/10 backdrop-blur-md text-slate-950 font-semibold border border-slate-900/15 shadow-sm"
+                      : "bg-card text-foreground font-semibold shadow-sm border border-border/50"
                     : isLanding
-                      ? "hover:text-slate-950 hover:bg-slate-900/5"
-                      : "hover:text-foreground hover:bg-foreground/5"
+                      ? "text-slate-700 hover:text-slate-950 hover:bg-slate-900/5"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
                 }`}
               >
                 {link.label}
@@ -92,7 +104,7 @@ export function Navbar() {
         </div>
 
         {/* Right side — auth + tools */}
-        <div className="flex items-center gap-3 z-10">
+        <div className="flex items-center gap-3">
           {/* Active Session Key indicator */}
           {!isLanding && (
             <>
@@ -103,7 +115,7 @@ export function Navbar() {
                   <span>{keyPrefix ? `${keyPrefix}...` : "Key Active"}</span>
                 </div>
               ) : (
-                <div className="hidden sm:flex items-center gap-2 border border-border bg-card px-3 py-1 rounded-full text-xs font-mono text-muted-foreground">
+                <div className="hidden sm:flex items-center gap-2 border border-border bg-card/80 px-3 py-1 rounded-full text-xs font-mono text-muted-foreground">
                   <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50" />
                   <span className="text-[11px]">No Active Key</span>
                 </div>
@@ -115,7 +127,7 @@ export function Navbar() {
           {user ? (
             <div className="flex items-center gap-2">
               {!isLanding && (
-                <div className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-full border border-border bg-card text-xs font-mono text-muted-foreground">
+                <div className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-full border border-border bg-card/80 text-xs font-mono text-muted-foreground">
                   <UserIcon className="h-3.5 w-3.5 text-muted-foreground" />
                   <span className="max-w-[120px] truncate">{user.email}</span>
                 </div>
@@ -124,7 +136,7 @@ export function Navbar() {
                 variant="ghost"
                 size="sm"
                 onClick={handleSignOut}
-                className={`h-8 text-xs gap-1 px-3 rounded-full ${
+                className={`h-8 text-xs gap-1 px-3 rounded-full transition-all duration-300 ${
                   isLanding
                     ? "text-slate-700 hover:text-slate-900 hover:bg-white/50"
                     : "text-muted-foreground hover:text-foreground"
@@ -138,9 +150,9 @@ export function Navbar() {
           ) : (
             <button
               onClick={() => setAuthModalOpen(true)}
-              className={`text-xs font-semibold px-6 py-2.5 rounded-full shadow-md transition-all hover:scale-105 active:scale-95 ${
+              className={`text-xs font-semibold px-5 py-2 rounded-xl shadow-md transition-all duration-300 hover:scale-105 active:scale-95 ${
                 isLanding
-                  ? "bg-white hover:bg-slate-50 text-slate-900 border border-slate-200/80"
+                  ? "bg-slate-950 hover:bg-slate-800 text-white"
                   : "bg-foreground text-background hover:opacity-90"
               }`}
             >
@@ -153,7 +165,7 @@ export function Navbar() {
             <Button
               variant="outline"
               size="icon"
-              className="h-8 w-8 border-border bg-card text-muted-foreground hover:text-foreground rounded-full"
+              className="h-8 w-8 border-border bg-card/80 text-muted-foreground hover:text-foreground rounded-xl transition-all duration-300"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               aria-label="Toggle theme"
             >
