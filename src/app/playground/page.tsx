@@ -176,8 +176,6 @@ export default function PlaygroundPage() {
     setLogs([]);
     setStatus("queued");
     setIsExecuting(true);
-    addLog("system", `Submitting execution request [language=${language}]...`);
-
     try {
       const res = await fetch(`${apiBaseUrl}/submit`, {
         method: "POST",
@@ -224,8 +222,6 @@ export default function PlaygroundPage() {
       }
 
       setSubmissionId(subId);
-      addLog("system", `Submission accepted. ID: ${subId}`);
-      addLog("system", `Connecting SSE stream at /stream/${subId}...`);
 
       // Connect SSE
       connectStream(subId);
@@ -256,7 +252,6 @@ export default function PlaygroundPage() {
         if (newStatus !== lastStatus) {
           lastStatus = newStatus;
           setStatus(newStatus);
-          addLog("system", `Status update: ${newStatus.toUpperCase()}`);
         }
 
         if (data.stdout && data.stdout !== seenStdout) {
@@ -323,18 +318,18 @@ export default function PlaygroundPage() {
     <div className="min-h-screen bg-background text-foreground font-sans antialiased">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 space-y-5">
         {/* Top Bar Controls */}
-        <div className="flex flex-col gap-3 rounded-xl border bg-card p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 rounded-[24px] border border-border bg-card p-5 shadow-sm sm:flex-row sm:items-center sm:justify-between">
           {/* Left: Key & Language */}
           <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
             {/* API Key Input */}
             <div className="flex flex-1 items-center gap-2">
-              <Key className="h-4 w-4 text-muted-foreground shrink-0" />
-              <Input
+              <Key className="h-4 w-4 text-muted-foreground shrink-0 ml-2" />
+              <input
                 type="password"
                 placeholder="Paste your X-API-Key (e.g. ce_live_...)"
                 value={inputKey}
                 onChange={(e) => setInputKey(e.target.value)}
-                className="font-mono text-xs h-9 rounded-lg"
+                className="w-full h-[44px] px-4 font-mono text-xs rounded-full border border-border bg-background text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-foreground transition-colors"
               />
             </div>
 
@@ -342,13 +337,13 @@ export default function PlaygroundPage() {
             <div className="flex items-center gap-2">
               <Code2 className="h-4 w-4 text-muted-foreground shrink-0" />
               <Select value={language} onValueChange={(val) => handleLanguageChange(val as Language)}>
-                <SelectTrigger className="w-[150px] font-mono text-xs h-9 rounded-lg">
+                <SelectTrigger className="w-[160px] font-mono text-xs h-[44px] px-4 rounded-full border border-border bg-background text-foreground focus:ring-0 focus:outline-none">
                   <SelectValue placeholder="Select Language" />
                 </SelectTrigger>
-                <SelectContent className="rounded-lg">
-                  <SelectItem value="python" className="font-mono text-xs">Python 3.11</SelectItem>
-                  <SelectItem value="cpp" className="font-mono text-xs">C++ 17 (GCC)</SelectItem>
-                  <SelectItem value="javascript" className="font-mono text-xs">Node.js 20</SelectItem>
+                <SelectContent className="rounded-2xl border-border bg-card shadow-xl p-1 font-mono text-xs">
+                  <SelectItem value="python" className="rounded-xl cursor-pointer">Python 3.11</SelectItem>
+                  <SelectItem value="cpp" className="rounded-xl cursor-pointer">C++ 17 (GCC)</SelectItem>
+                  <SelectItem value="javascript" className="rounded-xl cursor-pointer">Node.js 20</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -357,41 +352,38 @@ export default function PlaygroundPage() {
           {/* Right: Remaining Quota & Run Button */}
           <div className="flex items-center justify-between gap-3 sm:justify-end">
             {remainingQuota !== null && (
-              <div className="flex items-center gap-1.5 font-mono text-xs text-muted-foreground border-r pr-3">
+              <div className="flex items-center gap-1.5 font-mono text-xs text-muted-foreground border-r border-border pr-3">
                 <span>Quota:</span>
-                <Badge variant="outline" className="font-mono text-[11px] border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 rounded-md">
-                  {remainingQuota}/100 left
-                </Badge>
+                <span className="font-semibold text-foreground">{remainingQuota}/100</span>
               </div>
             )}
 
-            <Button
+            <button
               onClick={handleRun}
-              disabled={isExecuting}
-              size="sm"
-              className="bg-foreground text-background hover:bg-foreground/90 font-semibold text-xs gap-2 px-4 h-9 rounded-lg"
+              disabled={isExecuting || !inputKey.trim()}
+              className="h-[44px] px-6 rounded-full bg-slate-950 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-slate-950 font-semibold text-xs transition-all flex items-center gap-2 shadow-sm disabled:opacity-50 hover:scale-105 active:scale-95"
             >
               {isExecuting ? (
                 <>
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  Executing
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Running...</span>
                 </>
               ) : (
                 <>
-                  <Play className="h-3.5 w-3.5 fill-current" />
-                  Run Code
+                  <Play className="h-4 w-4 fill-current" />
+                  <span>Run Code</span>
                 </>
               )}
-            </Button>
+            </button>
           </div>
         </div>
 
         {/* Editor & Output Split Layout */}
         <div className="grid gap-5 lg:grid-cols-12">
-          {/* Code Editor & Stdin (Left 7 Cols) */}
-          <div className="flex flex-col gap-5 lg:col-span-7">
-            <Card className="rounded-xl border bg-card shadow-sm flex flex-col overflow-hidden">
-              <CardHeader className="py-2.5 px-4 border-b bg-muted/40 flex flex-row items-center justify-between space-y-0">
+          {/* Code Editor (Left 7 Cols) */}
+          <div className="flex flex-col lg:col-span-7">
+            <Card className="rounded-[20px] border border-border bg-card shadow-sm flex flex-col overflow-hidden h-full min-h-[560px]">
+              <CardHeader className="py-3 px-5 border-b border-border bg-muted/30 flex flex-row items-center justify-between space-y-0">
                 <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground">
                   <FileCode className="h-4 w-4 text-muted-foreground" />
                   <span>main.{language === "cpp" ? "cpp" : language === "python" ? "py" : "js"}</span>
@@ -399,15 +391,15 @@ export default function PlaygroundPage() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-7 px-2 text-xs font-mono text-muted-foreground hover:text-foreground rounded-md"
+                  className="h-7 px-3 text-xs font-mono text-muted-foreground hover:text-foreground rounded-full"
                   onClick={() => setCode(STARTER_SNIPPETS[language])}
                   title="Reset code snippet"
                 >
                   <RotateCcw className="mr-1.5 h-3.5 w-3.5" /> Reset
                 </Button>
               </CardHeader>
-              <CardContent className="p-0">
-                <div className="h-[420px] w-full border-b">
+              <CardContent className="p-0 flex-1">
+                <div className="h-full min-h-[500px] w-full">
                   <Editor
                     height="100%"
                     language={language === "cpp" ? "cpp" : language === "javascript" ? "javascript" : "python"}
@@ -426,10 +418,13 @@ export default function PlaygroundPage() {
                 </div>
               </CardContent>
             </Card>
+          </div>
 
-            {/* Stdin Panel */}
-            <Card className="rounded-xl border bg-card shadow-sm">
-              <CardHeader className="py-2.5 px-4 border-b bg-muted/40 space-y-0">
+          {/* Right 5 Cols: Stdin Box Above + Execution Terminal Stream Below */}
+          <div className="flex flex-col gap-5 lg:col-span-5">
+            {/* 1. Standard Input (stdin) Box - Placed Above Terminal */}
+            <Card className="rounded-[20px] border border-border bg-card shadow-sm">
+              <CardHeader className="py-2.5 px-4 border-b border-border bg-muted/30 space-y-0">
                 <CardTitle className="text-xs font-mono text-muted-foreground flex items-center gap-2 font-normal">
                   <SquareTerminal className="h-4 w-4 text-muted-foreground" />
                   Standard Input (stdin)
@@ -441,16 +436,14 @@ export default function PlaygroundPage() {
                   onChange={(e) => setInputData(e.target.value)}
                   placeholder="Type stdin input here..."
                   rows={3}
-                  className="font-mono text-xs leading-relaxed resize-none rounded-lg"
+                  className="font-mono text-xs leading-relaxed resize-none rounded-lg border-border bg-background focus:ring-0 focus:outline-none"
                 />
               </CardContent>
             </Card>
-          </div>
 
-          {/* Execution Stream Output Terminal (Right 5 Cols) */}
-          <div className="flex flex-col lg:col-span-5">
-            <Card className="rounded-xl border bg-card shadow-sm flex flex-col h-full min-h-[520px] overflow-hidden">
-              <CardHeader className="py-2.5 px-4 border-b bg-muted/40 flex flex-row items-center justify-between space-y-0">
+            {/* 2. Terminal Stream Output Box */}
+            <Card className="rounded-[20px] border border-border bg-card shadow-sm flex flex-col flex-1 min-h-[400px] overflow-hidden">
+              <CardHeader className="py-3 px-4 border-b border-border bg-muted/30 flex flex-row items-center justify-between space-y-0">
                 <CardTitle className="text-xs font-mono font-semibold flex items-center gap-2">
                   <Terminal className="h-4 w-4 text-muted-foreground" />
                   Terminal Stream
@@ -464,10 +457,10 @@ export default function PlaygroundPage() {
                 {/* Output log display */}
                 <div
                   ref={terminalRef}
-                  className="flex-1 overflow-y-auto p-4 space-y-1.5 font-mono text-xs leading-relaxed max-h-[540px]"
+                  className="flex-1 overflow-y-auto p-4 space-y-1.5 font-mono text-xs leading-relaxed max-h-[420px]"
                 >
                   {logs.length === 0 ? (
-                    <div className="h-full flex flex-col items-center justify-center text-muted-foreground pt-24 text-center">
+                    <div className="h-full flex flex-col items-center justify-center text-muted-foreground pt-16 text-center">
                       <Terminal className="h-8 w-8 mb-2.5 stroke-[1.25] text-muted-foreground/60" />
                       <p className="text-xs font-medium text-muted-foreground">Click &quot;Run Code&quot; to execute script.</p>
                       <p className="text-[11px] text-muted-foreground/70 mt-1">Stdout/stderr SSE stream will output here live.</p>
@@ -492,7 +485,7 @@ export default function PlaygroundPage() {
                 </div>
 
                 {/* Terminal Footer */}
-                <div className="border-t bg-muted/40 px-4 py-2 text-[11px] font-mono text-muted-foreground flex items-center justify-between">
+                <div className="border-t border-border bg-muted/30 px-4 py-2.5 text-[11px] font-mono text-muted-foreground flex items-center justify-between">
                   <span>{submissionId ? `Sub ID: ${submissionId}` : "No Active Run"}</span>
                   <span>{logs.filter(l => l.type !== "system").length} output lines</span>
                 </div>

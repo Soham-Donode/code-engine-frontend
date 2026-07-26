@@ -307,9 +307,18 @@ export default function DashboardPage() {
     const targetPrefix = keyToRevoke.prefix.replace(/\.\.\./g, "").trim();
 
     try {
+      // 1. Revoke on Go backend
       await fetch(`${apiBaseUrl}/api/keys/${encodeURIComponent(targetPrefix)}`, {
         method: "DELETE",
       }).catch(() => {});
+
+      // 2. Delete/Revoke from Supabase database so key does not reload on refresh
+      if (user && isSupabaseReady) {
+        await supabase
+          .from("api_keys")
+          .delete()
+          .eq("id", keyToRevoke.id);
+      }
 
       setKeys((prev) => prev.filter((k) => k.id !== keyToRevoke.id));
       if (keyPrefix && keyPrefix.includes(targetPrefix)) {
@@ -360,7 +369,7 @@ export default function DashboardPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Button
+            <button
               onClick={() => {
                 if (!user) {
                   setIsAuthModalOpen(true);
@@ -374,11 +383,11 @@ export default function DashboardPage() {
                 setIsCreateOpen(true);
               }}
               disabled={keys.length >= 5}
-              className="bg-foreground text-background hover:bg-foreground/90 font-semibold text-xs gap-1.5 px-3.5 h-8 rounded-lg disabled:opacity-50"
+              className="h-[40px] px-5 rounded-full bg-slate-950 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-slate-950 font-semibold text-xs transition-all flex items-center gap-2 shadow-sm disabled:opacity-50 hover:scale-105 active:scale-95"
             >
               <Plus className="h-4 w-4 stroke-[2]" />
-              New Key ({keys.length}/5)
-            </Button>
+              <span>New Key ({keys.length}/5)</span>
+            </button>
           </div>
         </div>
 
@@ -637,45 +646,44 @@ export default function DashboardPage() {
 
       {/* 5. Create New API Key Modal Dialog */}
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-        <DialogContent className="sm:max-w-md rounded-xl p-6 shadow-2xl">
-          <DialogHeader className="space-y-1">
-            <DialogTitle className="text-base font-semibold flex items-center gap-2">
-              <KeyRound className="h-4 w-4 text-muted-foreground" />
+        <DialogContent className="bg-card border border-border text-foreground sm:max-w-[420px] rounded-[24px] p-7 shadow-2xl [&>button]:top-6 [&>button]:right-6 [&>button]:text-muted-foreground [&>button]:hover:text-foreground">
+          <DialogHeader className="space-y-1.5 text-center items-center pb-1">
+            <DialogTitle className="text-xl font-semibold tracking-tight text-foreground">
               Create New API Key
             </DialogTitle>
-            <DialogDescription className="text-xs">
+            <DialogDescription className="text-xs text-muted-foreground max-w-[320px] leading-snug">
               Generates a new secret X-API-Key for sandboxed code execution payloads.
             </DialogDescription>
           </DialogHeader>
 
           {!newlyCreatedKey ? (
-            <form onSubmit={handleCreateKeySubmit} className="space-y-4 py-2">
+            <form onSubmit={handleCreateKeySubmit} className="space-y-4 pt-2">
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-muted-foreground">Key Name</label>
-                <Input
+                <label className="text-xs font-medium text-muted-foreground px-1">Key Name</label>
+                <input
                   type="text"
                   placeholder="e.g. myra-agent or dev-pipeline"
                   value={newKeyName}
                   onChange={(e) => setNewKeyName(e.target.value)}
-                  className="text-xs h-9 font-mono rounded-lg"
+                  className="w-full h-[46px] px-4 rounded-full border border-border bg-background text-foreground placeholder:text-muted-foreground/60 text-xs font-mono focus:outline-none focus:border-foreground transition-colors"
                   autoFocus
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-muted-foreground">Key Type</label>
+                <label className="text-xs font-medium text-muted-foreground px-1">Key Type</label>
                 <Select value={newKeyType} onValueChange={(val) => val && setNewKeyType(val as "DIRECT" | "STREAM")}>
-                  <SelectTrigger className="w-full text-xs h-9 font-mono rounded-lg">
+                  <SelectTrigger className="w-full h-[46px] px-4 text-xs font-mono rounded-full border border-border bg-background text-foreground focus:ring-0 focus:outline-none">
                     <SelectValue placeholder="Select Key Type" />
                   </SelectTrigger>
-                  <SelectContent className="font-mono text-xs rounded-lg">
-                    <SelectItem value="STREAM">
+                  <SelectContent className="font-mono text-xs rounded-2xl border-border bg-card shadow-xl p-1">
+                    <SelectItem value="STREAM" className="rounded-xl cursor-pointer">
                       <div className="flex flex-col text-left py-0.5">
                         <span className="font-semibold text-foreground">Stream Status (SSE)</span>
                         <span className="text-[10px] text-muted-foreground font-sans">Streams status updates first, then returns output</span>
                       </div>
                     </SelectItem>
-                    <SelectItem value="DIRECT">
+                    <SelectItem value="DIRECT" className="rounded-xl cursor-pointer">
                       <div className="flex flex-col text-left py-0.5">
                         <span className="font-semibold text-foreground font-mono">Direct Output</span>
                         <span className="text-[10px] text-muted-foreground font-sans">Returns stdout/stderr output directly in HTTP response</span>
@@ -686,34 +694,33 @@ export default function DashboardPage() {
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-muted-foreground">Expiration</label>
+                <label className="text-xs font-medium text-muted-foreground px-1">Expiration</label>
                 <Select value={newKeyExpiry} onValueChange={(val) => val && setNewKeyExpiry(val)}>
-                  <SelectTrigger className="w-full text-xs h-9 font-mono rounded-lg">
+                  <SelectTrigger className="w-full h-[46px] px-4 text-xs font-mono rounded-full border border-border bg-background text-foreground focus:ring-0 focus:outline-none">
                     <SelectValue placeholder="Select Expiration" />
                   </SelectTrigger>
-                  <SelectContent className="font-mono text-xs rounded-lg">
-                    <SelectItem value="Never">Never</SelectItem>
-                    <SelectItem value="24 Hours">24 Hours</SelectItem>
-                    <SelectItem value="7 Days">7 Days</SelectItem>
-                    <SelectItem value="30 Days">30 Days</SelectItem>
-                    <SelectItem value="90 Days">90 Days</SelectItem>
+                  <SelectContent className="font-mono text-xs rounded-2xl border-border bg-card shadow-xl p-1">
+                    <SelectItem value="Never" className="rounded-xl cursor-pointer">Never</SelectItem>
+                    <SelectItem value="24 Hours" className="rounded-xl cursor-pointer">24 Hours</SelectItem>
+                    <SelectItem value="7 Days" className="rounded-xl cursor-pointer">7 Days</SelectItem>
+                    <SelectItem value="30 Days" className="rounded-xl cursor-pointer">30 Days</SelectItem>
+                    <SelectItem value="90 Days" className="rounded-xl cursor-pointer">90 Days</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
-              <DialogFooter className="pt-2">
-                <Button
+              <div className="pt-2 flex items-center gap-3">
+                <button
                   type="button"
-                  variant="outline"
                   onClick={() => setIsCreateOpen(false)}
-                  className="text-xs rounded-lg"
+                  className="w-1/3 h-[46px] rounded-full border border-border bg-background text-foreground hover:bg-muted font-medium text-xs transition-colors"
                 >
                   Cancel
-                </Button>
-                <Button
+                </button>
+                <button
                   type="submit"
                   disabled={isGenerating}
-                  className="bg-foreground text-background hover:bg-foreground/90 font-semibold text-xs rounded-lg"
+                  className="w-2/3 h-[46px] rounded-full bg-slate-950 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-slate-950 font-semibold text-xs transition-colors flex items-center justify-center disabled:opacity-50"
                 >
                   {isGenerating ? (
                     <>
@@ -723,8 +730,8 @@ export default function DashboardPage() {
                   ) : (
                     "Create Key"
                   )}
-                </Button>
-              </DialogFooter>
+                </button>
+              </div>
             </form>
           ) : (
             <div className="space-y-4 py-2">
@@ -737,18 +744,18 @@ export default function DashboardPage() {
               </Alert>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-medium text-muted-foreground">Secret API Key</label>
-                <div className="flex items-center gap-2 rounded-lg border bg-muted/50 p-2 font-mono text-xs">
+                <label className="text-xs font-medium text-muted-foreground px-1">Secret API Key</label>
+                <div className="flex items-center gap-2 rounded-full border border-border bg-background p-1.5 px-3 font-mono text-xs">
                   <input
                     type="text"
                     readOnly
                     value={newlyCreatedKey.full}
-                    className="w-full bg-transparent font-mono text-xs focus:outline-none px-1"
+                    className="w-full bg-transparent font-mono text-xs focus:outline-none px-1 text-foreground"
                   />
                   <Button
                     size="icon"
                     variant="ghost"
-                    className="h-7 w-7 shrink-0 text-muted-foreground hover:text-foreground rounded-md"
+                    className="h-8 w-8 shrink-0 text-muted-foreground hover:text-foreground rounded-full"
                     onClick={() => handleCopyText(newlyCreatedKey.full)}
                   >
                     {copiedKey ? (
@@ -760,22 +767,20 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              <DialogFooter className="pt-2 flex gap-2">
-                <Link href="/playground" className="w-full">
-                  <Button size="sm" className="w-full bg-foreground text-background hover:bg-foreground/90 font-semibold text-xs gap-1.5 rounded-lg">
+              <div className="pt-2 flex items-center gap-2">
+                <Link href="/playground" className="w-2/3">
+                  <button className="w-full h-[46px] rounded-full bg-slate-950 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-slate-950 font-semibold text-xs transition-colors flex items-center justify-center gap-1.5">
                     <Play className="h-3.5 w-3.5" />
                     Test in Playground
-                  </Button>
+                  </button>
                 </Link>
-                <Button
-                  variant="outline"
-                  size="sm"
+                <button
                   onClick={() => setIsCreateOpen(false)}
-                  className="text-xs rounded-lg"
+                  className="w-1/3 h-[46px] rounded-full border border-border bg-background text-foreground hover:bg-muted font-medium text-xs transition-colors"
                 >
                   Done
-                </Button>
-              </DialogFooter>
+                </button>
+              </div>
             </div>
           )}
         </DialogContent>
@@ -783,25 +788,25 @@ export default function DashboardPage() {
 
       {/* 6. Confirm Revoke Key Alert Dialog */}
       <AlertDialog open={!!keyToRevoke} onOpenChange={(open) => !open && setKeyToRevoke(null)}>
-        <AlertDialogContent className="sm:max-w-md rounded-xl p-6 shadow-2xl">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-base font-semibold">
+        <AlertDialogContent className="bg-card border border-border text-foreground sm:max-w-[420px] rounded-[24px] p-7 shadow-2xl [&>button]:top-6 [&>button]:right-6">
+          <AlertDialogHeader className="space-y-1.5 text-center items-center pb-1">
+            <AlertDialogTitle className="text-xl font-semibold tracking-tight text-foreground">
               Revoke API Key &quot;{keyToRevoke?.name}&quot;?
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-xs">
-              This action cannot be undone. Any requests sending key prefix{" "}
-              <code className="font-mono">{keyToRevoke?.prefix}</code> will be rejected with HTTP 401.
+            <AlertDialogDescription className="text-xs text-muted-foreground max-w-[320px] leading-snug">
+              This action cannot be undone. Any applications using key prefix{" "}
+              <code className="font-mono bg-muted px-1.5 py-0.5 rounded border text-foreground">{keyToRevoke?.prefix}</code> will immediately lose access.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="pt-2">
-            <AlertDialogCancel className="text-xs rounded-lg">
+          <AlertDialogFooter className="pt-3 flex items-center gap-3 sm:justify-stretch">
+            <AlertDialogCancel className="w-1/2 h-[46px] rounded-full border border-border bg-background text-foreground hover:bg-muted font-medium text-xs transition-colors mt-0">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleConfirmRevoke}
-              className="bg-red-600 hover:bg-red-700 text-white font-semibold text-xs rounded-lg"
+              className="w-1/2 h-[46px] rounded-full bg-red-500 hover:bg-red-600 text-white font-semibold text-xs transition-colors shadow-sm"
             >
-              Confirm Revocation
+              Revoke Key
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
