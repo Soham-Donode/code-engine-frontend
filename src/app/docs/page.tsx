@@ -401,16 +401,44 @@ executeCode();`;
               </div>
             </section>
 
-            {/* Section 2: Authentication */}
+            {/* Section 2: Authentication & Key Types */}
             <section id="authentication" className="space-y-4 scroll-mt-32 pt-6 border-t">
-              <h2 className="text-xl font-bold tracking-tight">Authentication</h2>
+              <h2 className="text-xl font-bold tracking-tight">Authentication & Key Types</h2>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                CodeEngine uses API keys for authentication. Pass your key in every API request:
+                CodeEngine uses secret API keys for authentication. CodeEngine supports **2 distinct key types** tailored for different integration patterns:
               </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                <div className="rounded-xl border bg-card p-4 space-y-2 text-xs shadow-sm border-purple-500/30">
+                  <div className="flex items-center justify-between">
+                    <Badge className="bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20 font-mono text-[10px]">
+                      Direct Output
+                    </Badge>
+                    <span className="text-[10px] text-muted-foreground font-mono">Synchronous</span>
+                  </div>
+                  <h3 className="font-bold text-sm text-foreground">1. Direct Output Key</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Executes code synchronously and returns execution results (<code className="font-mono text-purple-500">stdout</code>, <code className="font-mono text-purple-500">stderr</code>, <code className="font-mono text-purple-500">status</code>) directly in the HTTP <code className="font-mono">POST /submit</code> response payload. Ideal for simple webhooks, REST APIs, and instant scripts.
+                  </p>
+                </div>
+
+                <div className="rounded-xl border bg-card p-4 space-y-2 text-xs shadow-sm border-blue-500/30">
+                  <div className="flex items-center justify-between">
+                    <Badge className="bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20 font-mono text-[10px]">
+                      Stream Status (SSE)
+                    </Badge>
+                    <span className="text-[10px] text-muted-foreground font-mono">Asynchronous SSE</span>
+                  </div>
+                  <h3 className="font-bold text-sm text-foreground">2. Stream Status Key</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">
+                    Returns a <code className="font-mono text-blue-500">submission_id</code> instantly from <code className="font-mono">POST /submit</code>, enabling real-time status and console output streaming via <code className="font-mono">GET /stream/:id</code> Server-Sent Events. Ideal for long-running scripts and live web terminals.
+                  </p>
+                </div>
+              </div>
 
               <div className="rounded-xl border bg-card p-4 text-xs space-y-3 font-mono shadow-sm">
                 <div className="flex items-center justify-between border-b pb-2.5">
-                  <span className="text-muted-foreground">HTTP Header:</span>
+                  <span className="text-muted-foreground">HTTP Request Header:</span>
                   <code className="font-semibold text-emerald-600 dark:text-emerald-400">X-API-Key: ce_...</code>
                 </div>
                 <div className="flex items-center justify-between">
@@ -456,6 +484,34 @@ executeCode();`;
                     <span className="col-span-3 font-bold text-foreground">input</span>
                     <span className="col-span-3 text-purple-600 dark:text-purple-400">string (optional)</span>
                     <span className="col-span-6 text-muted-foreground">STDIN string input provided to script</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-3 pt-2">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Response Payloads by Key Type</h3>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="space-y-1.5">
+                    <span className="text-xs font-semibold text-purple-600 dark:text-purple-400 font-mono">1. Direct Output Key Response:</span>
+                    <div className="rounded-xl border bg-muted/60 dark:bg-[#070A10] p-3 font-mono text-xs">
+                      <pre className="text-purple-600 dark:text-purple-400 leading-relaxed overflow-x-auto">{`{
+  "submission_id": "178508...",
+  "status": "completed",
+  "stdout": "Hello World!\\n",
+  "stderr": "",
+  "execution_time_ms": 142
+}`}</pre>
+                    </div>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <span className="text-xs font-semibold text-blue-600 dark:text-blue-400 font-mono">2. Stream Status Key Response:</span>
+                    <div className="rounded-xl border bg-muted/60 dark:bg-[#070A10] p-3 font-mono text-xs">
+                      <pre className="text-blue-600 dark:text-blue-400 leading-relaxed overflow-x-auto">{`{
+  "submission_id": "178508..."
+}`}</pre>
+                    </div>
                   </div>
                 </div>
               </div>

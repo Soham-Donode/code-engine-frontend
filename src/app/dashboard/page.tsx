@@ -57,6 +57,7 @@ interface ManagedKey {
   id: string;
   name: string;
   prefix: string;
+  keyType?: "DIRECT" | "STREAM";
   fullKey?: string;
   expires: string;
   lastUsed: string;
@@ -90,9 +91,10 @@ export default function DashboardPage() {
   // New key modal state
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [newKeyName, setNewKeyName] = useState("");
+  const [newKeyType, setNewKeyType] = useState<"DIRECT" | "STREAM">("STREAM");
   const [newKeyExpiry, setNewKeyExpiry] = useState("Never");
   const [isGenerating, setIsGenerating] = useState(false);
-  const [newlyCreatedKey, setNewlyCreatedKey] = useState<{ full: string; prefix: string } | null>(null);
+  const [newlyCreatedKey, setNewlyCreatedKey] = useState<{ full: string; prefix: string; type?: string } | null>(null);
   const [copiedKey, setCopiedKey] = useState(false);
 
   // Live usage inspect state
@@ -142,6 +144,7 @@ export default function DashboardPage() {
               id: item.id,
               name: item.name,
               prefix: item.prefix,
+              keyType: item.key_type || "STREAM",
               fullKey: item.full_key,
               expires: item.expires || "Never",
               lastUsed: item.last_used || "Never",
@@ -179,7 +182,7 @@ export default function DashboardPage() {
       const res = await fetch(`${apiBaseUrl}/api/keys`, {
         method: "POST",
         headers,
-        body: JSON.stringify({ name, expires: newKeyExpiry }),
+        body: JSON.stringify({ name, type: newKeyType, expires: newKeyExpiry }),
       });
 
       if (!res.ok) {
@@ -198,6 +201,7 @@ export default function DashboardPage() {
       const data = await res.json();
       const fullKeyVal = data.api_key || data.key || "";
       const prefixVal = data.key_prefix || data.prefix || (fullKeyVal ? fullKeyVal.substring(0, 8) : "");
+      const returnedType: "DIRECT" | "STREAM" = data.key_type || data.type || newKeyType;
 
       const formattedPrefix = prefixVal.length > 12
         ? `${prefixVal.substring(0, 10)}...${prefixVal.substring(prefixVal.length - 3)}`
@@ -207,6 +211,7 @@ export default function DashboardPage() {
         id: `key-${Date.now()}`,
         name,
         prefix: formattedPrefix,
+        keyType: returnedType,
         fullKey: fullKeyVal,
         expires: newKeyExpiry,
         lastUsed: "Just now",
@@ -224,6 +229,7 @@ export default function DashboardPage() {
             user_id: user.id,
             name,
             prefix: formattedPrefix,
+            key_type: returnedType,
             full_key: fullKeyVal,
             expires: newKeyExpiry,
             last_used: "Just now",
@@ -465,6 +471,13 @@ export default function DashboardPage() {
                             <div className="space-y-0.5">
                               <div className="flex items-center gap-2">
                                 <span className="font-medium">{key.name}</span>
+                                <Badge className={`font-mono text-[9px] px-1.5 py-0 ${
+                                  key.keyType === "DIRECT"
+                                    ? "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20"
+                                    : "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20"
+                                }`}>
+                                  {key.keyType === "DIRECT" ? "Direct Output" : "Stream Status"}
+                                </Badge>
                                 {isSessionActive && (
                                   <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 font-mono text-[9px] px-1.5 py-0">
                                     Active Session
@@ -647,6 +660,29 @@ export default function DashboardPage() {
                   className="text-xs h-9 font-mono rounded-lg"
                   autoFocus
                 />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-medium text-muted-foreground">Key Type</label>
+                <Select value={newKeyType} onValueChange={(val) => val && setNewKeyType(val as "DIRECT" | "STREAM")}>
+                  <SelectTrigger className="w-full text-xs h-9 font-mono rounded-lg">
+                    <SelectValue placeholder="Select Key Type" />
+                  </SelectTrigger>
+                  <SelectContent className="font-mono text-xs rounded-lg">
+                    <SelectItem value="STREAM">
+                      <div className="flex flex-col text-left py-0.5">
+                        <span className="font-semibold text-foreground">Stream Status (SSE)</span>
+                        <span className="text-[10px] text-muted-foreground font-sans">Streams status updates first, then returns output</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="DIRECT">
+                      <div className="flex flex-col text-left py-0.5">
+                        <span className="font-semibold text-foreground font-mono">Direct Output</span>
+                        <span className="text-[10px] text-muted-foreground font-sans">Returns stdout/stderr output directly in HTTP response</span>
+                      </div>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-1.5">
