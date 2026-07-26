@@ -19,10 +19,15 @@ function useMounted() {
 export function Navbar() {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
-  const { apiKey, keyPrefix } = useApiKey();
+  const { apiKey, keyPrefix, clearKey } = useApiKey();
   const { user, signOut } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const mounted = useMounted();
+
+  const handleSignOut = async () => {
+    clearKey();
+    await signOut();
+  };
 
   const navLinks = [
     { href: "/", label: "Dashboard", icon: KeyRound },
@@ -94,7 +99,7 @@ export function Navbar() {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={signOut}
+                onClick={handleSignOut}
                 className="h-8 text-xs text-slate-400 hover:text-white hover:bg-[#162035] gap-1 px-2.5"
                 title="Sign Out"
               >

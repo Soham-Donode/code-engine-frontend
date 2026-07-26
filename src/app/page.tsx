@@ -63,53 +63,6 @@ interface ManagedKey {
   createdAt: string;
 }
 
-const DEFAULT_KEYS: ManagedKey[] = [
-  {
-    id: "key-1",
-    name: "myra-agent",
-    prefix: "ce_live_9841...272",
-    expires: "Never",
-    lastUsed: "11 days ago",
-    usage: 12,
-    limit: 100,
-    limitType: "TODAY",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "key-2",
-    name: "whatsapp-agent",
-    prefix: "ce_live_e558...e3c",
-    expires: "Never",
-    lastUsed: "Never",
-    usage: 0,
-    limit: 100,
-    limitType: "TODAY",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "key-3",
-    name: "claude code",
-    prefix: "ce_live_7a29...2b6",
-    expires: "30 Days",
-    lastUsed: "Never",
-    usage: 0,
-    limit: 100,
-    limitType: "TODAY",
-    createdAt: new Date().toISOString(),
-  },
-  {
-    id: "key-4",
-    name: "langchain-learn",
-    prefix: "ce_live_6251...3ec",
-    expires: "90 Days",
-    lastUsed: "Never",
-    usage: 0,
-    limit: 100,
-    limitType: "TODAY",
-    createdAt: new Date().toISOString(),
-  },
-];
-
 interface UsageStats {
   prefix: string;
   requests_today: number;
@@ -118,28 +71,21 @@ interface UsageStats {
   reset_time: string;
 }
 
+import { AuthModal } from "@/components/AuthModal";
+import { Lock, LogIn } from "lucide-react";
+
 export default function DashboardPage() {
   const { keyPrefix, setKeyDetails, clearKey } = useApiKey();
   const { user, isConfigured: isSupabaseReady } = useAuth();
 
   // Keys list & search state
-  const [keys, setKeys] = useState<ManagedKey[]>(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("ce_managed_keys");
-      if (saved) {
-        try {
-          return JSON.parse(saved);
-        } catch {
-          // fallback
-        }
-      }
-    }
-    return DEFAULT_KEYS;
-  });
-
+  const [keys, setKeys] = useState<ManagedKey[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedKeyIds, setSelectedKeyIds] = useState<string[]>([]);
   const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
+
+  // Auth modal state
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   // New key modal state
   const [isCreateOpen, setIsCreateOpen] = useState(false);
@@ -172,7 +118,7 @@ export default function DashboardPage() {
         return;
       }
 
-      if (data && data.length > 0) {
+      if (data) {
         const mappedKeys: ManagedKey[] = data.map((item) => ({
           id: item.id,
           name: item.name,
@@ -191,13 +137,6 @@ export default function DashboardPage() {
 
     fetchSupabaseKeys();
   }, [user, isSupabaseReady]);
-
-  // Persist keys to localStorage for guest mode
-  useEffect(() => {
-    if (typeof window !== "undefined" && !user) {
-      localStorage.setItem("ce_managed_keys", JSON.stringify(keys));
-    }
-  }, [keys, user]);
 
   // Handle generate API key
   const handleCreateKeySubmit = async (e?: React.FormEvent) => {
@@ -377,6 +316,10 @@ export default function DashboardPage() {
           <div className="flex items-center gap-3">
             <Button
               onClick={() => {
+                if (!user) {
+                  setIsAuthModalOpen(true);
+                  return;
+                }
                 setNewlyCreatedKey(null);
                 setIsCreateOpen(true);
               }}
@@ -393,17 +336,38 @@ export default function DashboardPage() {
           <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
           <Input
             type="text"
-            placeholder="Search by name..."
+            placeholder={user ? "Search by name..." : "Sign in to search API keys..."}
+            disabled={!user}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 text-xs bg-[#090E18] border-[#1E293B] text-slate-100 placeholder:text-slate-500 rounded-xl h-9 focus-visible:ring-[#00E599]/50"
+            className="pl-10 text-xs bg-[#090E18] border-[#1E293B] text-slate-100 placeholder:text-slate-500 rounded-xl h-9 focus-visible:ring-[#00E599]/50 disabled:opacity-50"
           />
         </div>
 
-        {/* 3. API Keys Table Component Container */}
-        <div className="rounded-2xl border border-[#1E293B] bg-[#090E18] shadow-sm">
-          <div className="w-full overflow-visible">
-            <table className="w-full text-left text-xs">
+        {/* 3. API Keys Table Component / Unauthenticated State */}
+        {!user ? (
+          <div className="rounded-2xl border border-[#1E293B] bg-[#090E18] p-12 text-center flex flex-col items-center justify-center space-y-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#00E599]/10 text-[#00E599] border border-[#00E599]/20">
+              <Lock className="h-6 w-6 text-[#00E599]" />
+            </div>
+            <div className="space-y-1 max-w-sm">
+              <h3 className="text-base font-bold text-white">Authentication Required</h3>
+              <p className="text-xs text-slate-400">
+                API keys are isolated per user account. Sign in with Google or Email to view, create, and manage your API keys.
+              </p>
+            </div>
+            <Button
+              onClick={() => setIsAuthModalOpen(true)}
+              className="bg-[#00E599] text-slate-950 hover:bg-[#00E599]/90 font-bold text-xs gap-2 px-5 h-9 rounded-xl mt-2"
+            >
+              <LogIn className="h-4 w-4" />
+              Sign In to Access API Keys
+            </Button>
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-[#1E293B] bg-[#090E18] shadow-sm">
+            <div className="w-full overflow-visible">
+              <table className="w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-[#1E293B] bg-[#0C1423]/60 text-slate-400 font-medium">
                   <th className="py-3 px-4 w-10">
@@ -575,6 +539,7 @@ export default function DashboardPage() {
             <span>{filteredKeys.length} {filteredKeys.length === 1 ? "key" : "keys"}</span>
           </div>
         </div>
+        )}
 
         {/* 4. Live Inspected Usage Details Card (if active) */}
         {inspectedPrefix && usage && (
@@ -760,6 +725,9 @@ export default function DashboardPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* 7. Auth Modal */}
+      <AuthModal open={isAuthModalOpen} onOpenChange={setIsAuthModalOpen} />
     </div>
   );
 }

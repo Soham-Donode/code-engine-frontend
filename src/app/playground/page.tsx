@@ -80,7 +80,7 @@ try {
 type ExecutionStatus = "idle" | "queued" | "running" | "completed" | "error" | "timeout";
 
 interface LogLine {
-  id: number;
+  id: string;
   type: "stdout" | "stderr" | "system";
   text: string;
 }
@@ -103,7 +103,6 @@ export default function PlaygroundPage() {
 
   const terminalRef = useRef<HTMLDivElement>(null);
   const eventSourceRef = useRef<EventSource | null>(null);
-  const logIdCounter = useRef<number>(0);
 
   const apiBaseUrl =
     process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
@@ -116,8 +115,8 @@ export default function PlaygroundPage() {
 
   // Helper to add log line
   const addLog = (type: "stdout" | "stderr" | "system", text: string) => {
-    logIdCounter.current += 1;
-    setLogs((prev) => [...prev, { id: logIdCounter.current, type, text }]);
+    const id = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    setLogs((prev) => [...prev, { id, type, text }]);
   };
 
   // Auto scroll terminal
