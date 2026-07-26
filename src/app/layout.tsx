@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Inter, Geist_Mono } from "next/font/google";
+import { Inter, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { AuthProvider } from "@/context/AuthContext";
@@ -18,6 +18,12 @@ const geistMono = Geist_Mono({
   variable: "--font-mono",
 });
 
+const instrumentSerif = Instrument_Serif({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-serif",
+});
+
 export const metadata: Metadata = {
   title: "CodeEngine | Sandboxed Code Execution API & Dashboard",
   description:
@@ -30,7 +36,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={cn("font-sans", inter.variable, geistMono.variable)}>
+    <html lang="en" suppressHydrationWarning className={cn("font-sans", inter.variable, geistMono.variable, instrumentSerif.variable)}>
       <body className="min-h-screen bg-background font-sans text-foreground antialiased selection:bg-primary/20">
         <ThemeProvider
           attribute="class"

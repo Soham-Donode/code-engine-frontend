@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { useTheme } from "next-themes";
-import { Moon, Sun, KeyRound, Play, BookOpen, Cpu, User as UserIcon, LogOut, LogIn } from "lucide-react";
+import { Moon, Sun, Zap, User as UserIcon, LogOut, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApiKey } from "@/context/ApiKeyContext";
 import { useAuth } from "@/context/AuthContext";
@@ -24,83 +24,111 @@ export function Navbar() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const mounted = useMounted();
 
+  const isLanding = pathname === "/";
+
   const handleSignOut = async () => {
     clearKey();
     await signOut();
   };
 
   const navLinks = [
-    { href: "/", label: "Dashboard", icon: KeyRound },
-    { href: "/playground", label: "Playground", icon: Play },
-    { href: "/docs", label: "API Reference", icon: BookOpen },
+    { href: "/dashboard", label: "Dashboard" },
+    { href: "/playground", label: "Playground" },
+    { href: "/docs", label: "API Reference" },
   ];
 
+  // On landing page: absolute + transparent so it floats over the hero image
+  // On inner pages: sticky + semi-opaque backdrop so it stays at the top
+  const headerClasses = isLanding
+    ? "absolute top-0 left-0 right-0 z-50 bg-transparent"
+    : "sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md";
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-slate-800/80 bg-white/95 dark:bg-[#0B0F17]/95 backdrop-blur-sm transition-colors">
-      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6">
-        {/* Brand */}
-        <div className="flex items-center gap-6">
-          <Link href="/" className="flex items-center gap-2.5 text-sm font-semibold tracking-tight text-slate-900 dark:text-white transition-colors hover:text-slate-700 dark:hover:text-slate-200">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-900 dark:bg-slate-800/80 text-white border border-slate-800 dark:border-slate-700/60 shadow-sm">
-              <Cpu className="h-4 w-4 text-white" />
+    <header className={headerClasses}>
+      {/* Absolute positioning container for true centering */}
+      <div className="relative flex items-center justify-between px-6 pt-6 pb-2 sm:px-10 min-h-[64px]">
+        {/* Left Side: Brand Logo */}
+        <div className="flex items-center gap-2.5 z-10">
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className={`flex h-8 w-8 items-center justify-center rounded-xl shadow-md ${
+              isLanding ? "bg-slate-900 text-white" : "bg-foreground text-background"
+            }`}>
+              <Zap className="h-4 w-4 fill-current" />
             </div>
-            <span className="font-semibold tracking-tight text-slate-900 dark:text-white">CodeEngine</span>
-            <span className="rounded-md bg-slate-100 dark:bg-slate-800/60 px-1.5 py-0.5 text-[10px] font-mono font-medium text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700/50">
-              v1.0
+            <span className={`text-lg font-bold tracking-tight ${
+              isLanding ? "text-slate-900" : "text-foreground"
+            }`}>
+              CodeEngine
             </span>
           </Link>
-
-          {/* Navigation Links */}
-          <nav className="flex items-center gap-1">
-            {navLinks.map((link) => {
-              const Icon = link.icon;
-              const isActive = pathname === link.href;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
-                    isActive
-                      ? "bg-slate-900 text-white dark:bg-slate-800 dark:text-white font-semibold shadow-sm"
-                      : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200"
-                  }`}
-                >
-                  <Icon className={`h-3.5 w-3.5 ${isActive ? "text-white" : "text-slate-500 dark:text-slate-400"}`} />
-                  <span>{link.label}</span>
-                </Link>
-              );
-            })}
-          </nav>
         </div>
 
-        {/* Right tools */}
-        <div className="flex items-center gap-3">
+        {/* Center: Absolutely Centered Floating Pill Navigation */}
+        <div className={`absolute left-1/2 -translate-x-1/2 top-6 z-20 hidden md:flex items-center gap-4 backdrop-blur-md px-4 py-2 rounded-full border shadow-lg text-xs font-medium ${
+          isLanding
+            ? "bg-white/85 border-white/60 text-slate-700"
+            : "bg-card/90 border-border text-muted-foreground"
+        }`}>
+          {navLinks.map((link) => {
+            const isActive = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`px-3 py-1 rounded-full transition-all duration-150 ${
+                  isActive
+                    ? isLanding
+                      ? "bg-slate-900 text-white font-semibold shadow-sm"
+                      : "bg-foreground text-background font-semibold shadow-sm"
+                    : isLanding
+                      ? "hover:text-slate-950"
+                      : "hover:text-foreground hover:bg-muted/50"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* Right side — auth + tools */}
+        <div className="flex items-center gap-3 z-10">
           {/* Active Session Key indicator */}
-          {apiKey ? (
-            <div className="hidden sm:flex items-center gap-2 border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 rounded-lg text-xs font-mono text-emerald-600 dark:text-emerald-400">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400" />
-              <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">Active:</span>
-              <span>{keyPrefix ? `${keyPrefix}...` : "Key Active"}</span>
-            </div>
-          ) : (
-            <div className="hidden sm:flex items-center gap-2 border border-slate-200 dark:border-slate-800 bg-slate-100/80 dark:bg-slate-900/60 px-2.5 py-1 rounded-lg text-xs font-mono text-slate-600 dark:text-slate-400">
-              <span className="h-1.5 w-1.5 rounded-full bg-slate-400 dark:bg-slate-500" />
-              <span className="text-[11px]">No Active Key</span>
-            </div>
+          {!isLanding && (
+            <>
+              {apiKey ? (
+                <div className="hidden sm:flex items-center gap-2 border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 rounded-full text-xs font-mono text-emerald-600 dark:text-emerald-400">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
+                  <span className="text-[11px] font-medium opacity-80">Active:</span>
+                  <span>{keyPrefix ? `${keyPrefix}...` : "Key Active"}</span>
+                </div>
+              ) : (
+                <div className="hidden sm:flex items-center gap-2 border border-border bg-card px-3 py-1 rounded-full text-xs font-mono text-muted-foreground">
+                  <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50" />
+                  <span className="text-[11px]">No Active Key</span>
+                </div>
+              )}
+            </>
           )}
 
-          {/* Auth Status & Sign In Button */}
+          {/* Auth Status & Log In / Sign Out */}
           {user ? (
             <div className="flex items-center gap-2">
-              <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 text-xs font-mono text-slate-700 dark:text-slate-300">
-                <UserIcon className="h-3.5 w-3.5 text-slate-400" />
-                <span className="max-w-[120px] truncate">{user.email}</span>
-              </div>
+              {!isLanding && (
+                <div className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-full border border-border bg-card text-xs font-mono text-muted-foreground">
+                  <UserIcon className="h-3.5 w-3.5 text-muted-foreground" />
+                  <span className="max-w-[120px] truncate">{user.email}</span>
+                </div>
+              )}
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleSignOut}
-                className="h-8 text-xs text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 gap-1 px-2.5 rounded-lg"
+                className={`h-8 text-xs gap-1 px-3 rounded-full ${
+                  isLanding
+                    ? "text-slate-700 hover:text-slate-900 hover:bg-white/50"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
                 title="Sign Out"
               >
                 <LogOut className="h-3.5 w-3.5" />
@@ -108,27 +136,29 @@ export function Navbar() {
               </Button>
             </div>
           ) : (
-            <Button
-              size="sm"
+            <button
               onClick={() => setAuthModalOpen(true)}
-              className="h-8 bg-slate-900 dark:bg-white text-white dark:text-slate-950 hover:bg-slate-800 dark:hover:bg-slate-200 font-semibold text-xs gap-1.5 px-3 rounded-lg"
+              className={`text-xs font-semibold px-6 py-2.5 rounded-full shadow-md transition-all hover:scale-105 active:scale-95 ${
+                isLanding
+                  ? "bg-white hover:bg-slate-50 text-slate-900 border border-slate-200/80"
+                  : "bg-foreground text-background hover:opacity-90"
+              }`}
             >
-              <LogIn className="h-3.5 w-3.5" />
-              Sign In
-            </Button>
+              Log in
+            </button>
           )}
 
           {/* Theme Toggle */}
-          {mounted && (
+          {!isLanding && mounted && (
             <Button
               variant="outline"
               size="icon"
-              className="h-8 w-8 border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60 rounded-lg"
+              className="h-8 w-8 border-border bg-card text-muted-foreground hover:text-foreground rounded-full"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
               aria-label="Toggle theme"
             >
               {theme === "dark" ? (
-                <Sun className="h-4 w-4 text-slate-300" />
+                <Sun className="h-4 w-4 text-amber-400" />
               ) : (
                 <Moon className="h-4 w-4 text-slate-700" />
               )}
