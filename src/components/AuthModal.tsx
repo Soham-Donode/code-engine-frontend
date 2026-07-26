@@ -55,19 +55,19 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-white border-none text-slate-900 sm:max-w-[400px] rounded-[24px] p-8 shadow-2xl [&>button]:top-6 [&>button]:right-6 [&>button]:text-slate-500 [&>button]:hover:text-slate-900">
+      <DialogContent className="bg-white dark:bg-[#0B0F17] border border-transparent dark:border-slate-800 text-slate-900 dark:text-slate-100 sm:max-w-[400px] rounded-[24px] p-8 shadow-2xl [&>button]:top-6 [&>button]:right-6 [&>button]:text-slate-400 [&>button]:hover:text-slate-700 dark:[&>button]:hover:text-slate-200">
         <DialogHeader className="space-y-2 text-center items-center pb-2">
-          <DialogTitle className="text-2xl font-medium tracking-tight text-slate-900">
+          <DialogTitle className="text-2xl font-medium tracking-tight text-slate-900 dark:text-slate-100">
             {mode === "signin" ? "Log in or sign up" : "Create your account"}
           </DialogTitle>
-          <DialogDescription className="text-sm text-slate-600 max-w-[280px] leading-snug">
+          <DialogDescription className="text-sm text-slate-600 dark:text-slate-400 max-w-[280px] leading-snug">
             You’ll get smarter responses and can upload files, images, and more.
           </DialogDescription>
         </DialogHeader>
 
         {!isConfigured && (
-          <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800">
-            <p className="font-semibold text-amber-900">Supabase Setup Required</p>
+          <div className="rounded-xl border border-amber-200 bg-amber-50 dark:border-amber-900/50 dark:bg-amber-950/40 p-3 text-xs text-amber-800 dark:text-amber-300">
+            <p className="font-semibold text-amber-900 dark:text-amber-200">Supabase Setup Required</p>
             <p className="mt-1 text-[11px] opacity-90">
               Please add <code>NEXT_PUBLIC_SUPABASE_URL</code> and <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> to <code>.env.local</code>.
             </p>
@@ -80,7 +80,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
             type="button"
             onClick={handleGoogleSignIn}
             disabled={isLoading}
-            className="w-full flex items-center justify-center gap-3 h-[48px] rounded-full border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 font-medium text-sm transition-colors shadow-sm disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-3 h-[48px] rounded-full border border-slate-300 dark:border-slate-800 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/80 text-slate-800 dark:text-slate-200 font-medium text-sm transition-colors shadow-sm disabled:opacity-50"
           >
             <svg className="h-5 w-5" viewBox="0 0 24 24">
               <path
@@ -104,8 +104,8 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
           </button>
 
           <div className="relative flex items-center justify-center my-6">
-            <div className="w-full border-t border-slate-200" />
-            <span className="absolute bg-white px-3 text-[11px] font-medium text-slate-400 uppercase tracking-wider">
+            <div className="w-full border-t border-slate-200 dark:border-slate-800" />
+            <span className="absolute bg-white dark:bg-[#0B0F17] px-3 text-[11px] font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider">
               OR
             </span>
           </div>
@@ -117,7 +117,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
                 placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full h-[50px] px-5 rounded-full border border-slate-300 text-slate-900 placeholder:text-slate-400 text-sm focus:outline-none focus:border-slate-800 transition-colors"
+                className="w-full h-[50px] px-5 rounded-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm focus:outline-none focus:border-slate-800 dark:focus:border-slate-400 transition-colors"
                 required
               />
             </div>
@@ -128,7 +128,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full h-[50px] px-5 rounded-full border border-slate-300 text-slate-900 placeholder:text-slate-400 text-sm focus:outline-none focus:border-slate-800 transition-colors"
+                className="w-full h-[50px] px-5 rounded-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 text-sm focus:outline-none focus:border-slate-800 dark:focus:border-slate-400 transition-colors"
                 required
               />
             </div>
@@ -136,7 +136,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full h-[48px] mt-2 rounded-full bg-slate-950 hover:bg-slate-800 text-white font-medium text-sm transition-colors flex items-center justify-center disabled:opacity-50"
+              className="w-full h-[48px] mt-2 rounded-full bg-slate-950 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-slate-950 font-medium text-sm transition-colors flex items-center justify-center disabled:opacity-50"
             >
               {isLoading ? (
                 <Loader2 className="h-5 w-5 animate-spin" />
@@ -150,7 +150,7 @@ export function AuthModal({ open, onOpenChange }: AuthModalProps) {
             <button
               type="button"
               onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-              className="text-xs text-slate-500 hover:text-slate-900 hover:underline"
+              className="text-xs text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:underline"
             >
               {mode === "signin"
                 ? "Don't have an account? Sign up"

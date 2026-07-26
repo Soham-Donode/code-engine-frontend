@@ -320,32 +320,32 @@ export default function PlaygroundPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0F17] text-slate-100 font-sans antialiased">
+    <div className="min-h-screen bg-background text-foreground font-sans antialiased">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 space-y-5">
         {/* Top Bar Controls */}
-        <div className="flex flex-col gap-3 rounded-xl border border-slate-800 bg-[#0D1117] p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 rounded-xl border bg-card p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
           {/* Left: Key & Language */}
           <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
             {/* API Key Input */}
             <div className="flex flex-1 items-center gap-2">
-              <Key className="h-4 w-4 text-slate-400 shrink-0" />
+              <Key className="h-4 w-4 text-muted-foreground shrink-0" />
               <Input
                 type="password"
                 placeholder="Paste your X-API-Key (e.g. ce_live_...)"
                 value={inputKey}
                 onChange={(e) => setInputKey(e.target.value)}
-                className="font-mono text-xs h-9 bg-slate-900/60 border-slate-800 text-slate-100 rounded-lg focus-visible:ring-slate-700"
+                className="font-mono text-xs h-9 rounded-lg"
               />
             </div>
 
             {/* Language Selector */}
             <div className="flex items-center gap-2">
-              <Code2 className="h-4 w-4 text-slate-400 shrink-0" />
+              <Code2 className="h-4 w-4 text-muted-foreground shrink-0" />
               <Select value={language} onValueChange={(val) => handleLanguageChange(val as Language)}>
-                <SelectTrigger className="w-[150px] font-mono text-xs h-9 bg-slate-900/60 border-slate-800 text-slate-100 rounded-lg">
+                <SelectTrigger className="w-[150px] font-mono text-xs h-9 rounded-lg">
                   <SelectValue placeholder="Select Language" />
                 </SelectTrigger>
-                <SelectContent className="bg-[#0D1117] border-slate-800 text-slate-100 rounded-lg">
+                <SelectContent className="rounded-lg">
                   <SelectItem value="python" className="font-mono text-xs">Python 3.11</SelectItem>
                   <SelectItem value="cpp" className="font-mono text-xs">C++ 17 (GCC)</SelectItem>
                   <SelectItem value="javascript" className="font-mono text-xs">Node.js 20</SelectItem>
@@ -357,9 +357,9 @@ export default function PlaygroundPage() {
           {/* Right: Remaining Quota & Run Button */}
           <div className="flex items-center justify-between gap-3 sm:justify-end">
             {remainingQuota !== null && (
-              <div className="flex items-center gap-1.5 font-mono text-xs text-slate-400 border-r border-slate-800 pr-3">
+              <div className="flex items-center gap-1.5 font-mono text-xs text-muted-foreground border-r pr-3">
                 <span>Quota:</span>
-                <Badge variant="outline" className="font-mono text-[11px] border-emerald-500/30 text-emerald-400 bg-emerald-500/10 rounded-md">
+                <Badge variant="outline" className="font-mono text-[11px] border-emerald-500/30 text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 rounded-md">
                   {remainingQuota}/100 left
                 </Badge>
               </div>
@@ -369,7 +369,7 @@ export default function PlaygroundPage() {
               onClick={handleRun}
               disabled={isExecuting}
               size="sm"
-              className="bg-white text-slate-950 hover:bg-slate-200 font-semibold text-xs gap-2 px-4 h-9 rounded-lg"
+              className="bg-foreground text-background hover:bg-foreground/90 font-semibold text-xs gap-2 px-4 h-9 rounded-lg"
             >
               {isExecuting ? (
                 <>
@@ -390,16 +390,16 @@ export default function PlaygroundPage() {
         <div className="grid gap-5 lg:grid-cols-12">
           {/* Code Editor & Stdin (Left 7 Cols) */}
           <div className="flex flex-col gap-5 lg:col-span-7">
-            <Card className="rounded-xl border border-slate-800 bg-[#0D1117] shadow-sm flex flex-col overflow-hidden">
-              <CardHeader className="py-2.5 px-4 border-b border-slate-800 bg-slate-900/40 flex flex-row items-center justify-between space-y-0">
-                <div className="flex items-center gap-2 text-xs font-mono text-slate-300">
-                  <FileCode className="h-4 w-4 text-slate-400" />
+            <Card className="rounded-xl border bg-card shadow-sm flex flex-col overflow-hidden">
+              <CardHeader className="py-2.5 px-4 border-b bg-muted/40 flex flex-row items-center justify-between space-y-0">
+                <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground">
+                  <FileCode className="h-4 w-4 text-muted-foreground" />
                   <span>main.{language === "cpp" ? "cpp" : language === "python" ? "py" : "js"}</span>
                 </div>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-7 px-2 text-xs font-mono text-slate-400 hover:text-white hover:bg-slate-800/60 rounded-md"
+                  className="h-7 px-2 text-xs font-mono text-muted-foreground hover:text-foreground rounded-md"
                   onClick={() => setCode(STARTER_SNIPPETS[language])}
                   title="Reset code snippet"
                 >
@@ -407,7 +407,7 @@ export default function PlaygroundPage() {
                 </Button>
               </CardHeader>
               <CardContent className="p-0">
-                <div className="h-[420px] w-full border-b border-slate-800">
+                <div className="h-[420px] w-full border-b">
                   <Editor
                     height="100%"
                     language={language === "cpp" ? "cpp" : language === "javascript" ? "javascript" : "python"}
@@ -428,10 +428,10 @@ export default function PlaygroundPage() {
             </Card>
 
             {/* Stdin Panel */}
-            <Card className="rounded-xl border border-slate-800 bg-[#0D1117] shadow-sm">
-              <CardHeader className="py-2.5 px-4 border-b border-slate-800 bg-slate-900/40 space-y-0">
-                <CardTitle className="text-xs font-mono text-slate-400 flex items-center gap-2 font-normal">
-                  <SquareTerminal className="h-4 w-4 text-slate-400" />
+            <Card className="rounded-xl border bg-card shadow-sm">
+              <CardHeader className="py-2.5 px-4 border-b bg-muted/40 space-y-0">
+                <CardTitle className="text-xs font-mono text-muted-foreground flex items-center gap-2 font-normal">
+                  <SquareTerminal className="h-4 w-4 text-muted-foreground" />
                   Standard Input (stdin)
                 </CardTitle>
               </CardHeader>
@@ -441,7 +441,7 @@ export default function PlaygroundPage() {
                   onChange={(e) => setInputData(e.target.value)}
                   placeholder="Type stdin input here..."
                   rows={3}
-                  className="font-mono text-xs leading-relaxed bg-slate-900/60 border-slate-800 text-slate-100 resize-none rounded-lg focus-visible:ring-slate-700"
+                  className="font-mono text-xs leading-relaxed resize-none rounded-lg"
                 />
               </CardContent>
             </Card>
@@ -449,10 +449,10 @@ export default function PlaygroundPage() {
 
           {/* Execution Stream Output Terminal (Right 5 Cols) */}
           <div className="flex flex-col lg:col-span-5">
-            <Card className="rounded-xl border border-slate-800 bg-[#0D1117] shadow-sm flex flex-col h-full min-h-[520px] overflow-hidden">
-              <CardHeader className="py-2.5 px-4 border-b border-slate-800 bg-slate-900/40 flex flex-row items-center justify-between space-y-0">
-                <CardTitle className="text-xs font-mono font-semibold text-white flex items-center gap-2">
-                  <Terminal className="h-4 w-4 text-slate-400" />
+            <Card className="rounded-xl border bg-card shadow-sm flex flex-col h-full min-h-[520px] overflow-hidden">
+              <CardHeader className="py-2.5 px-4 border-b bg-muted/40 flex flex-row items-center justify-between space-y-0">
+                <CardTitle className="text-xs font-mono font-semibold flex items-center gap-2">
+                  <Terminal className="h-4 w-4 text-muted-foreground" />
                   Terminal Stream
                 </CardTitle>
                 <div className="flex items-center gap-2">
@@ -460,17 +460,17 @@ export default function PlaygroundPage() {
                 </div>
               </CardHeader>
 
-              <CardContent className="p-0 flex-1 flex flex-col bg-[#070A10] text-slate-100 font-mono text-xs">
+              <CardContent className="p-0 flex-1 flex flex-col bg-muted/20 dark:bg-[#070A10] font-mono text-xs">
                 {/* Output log display */}
                 <div
                   ref={terminalRef}
                   className="flex-1 overflow-y-auto p-4 space-y-1.5 font-mono text-xs leading-relaxed max-h-[540px]"
                 >
                   {logs.length === 0 ? (
-                    <div className="h-full flex flex-col items-center justify-center text-slate-500 pt-24 text-center">
-                      <Terminal className="h-8 w-8 mb-2.5 stroke-[1.25] text-slate-600" />
-                      <p className="text-xs font-medium text-slate-400">Click &quot;Run Code&quot; to execute script.</p>
-                      <p className="text-[11px] text-slate-500 mt-1">Stdout/stderr SSE stream will output here live.</p>
+                    <div className="h-full flex flex-col items-center justify-center text-muted-foreground pt-24 text-center">
+                      <Terminal className="h-8 w-8 mb-2.5 stroke-[1.25] text-muted-foreground/60" />
+                      <p className="text-xs font-medium text-muted-foreground">Click &quot;Run Code&quot; to execute script.</p>
+                      <p className="text-[11px] text-muted-foreground/70 mt-1">Stdout/stderr SSE stream will output here live.</p>
                     </div>
                   ) : (
                     logs.map((log) => (
@@ -478,13 +478,13 @@ export default function PlaygroundPage() {
                         key={log.id}
                         className={`whitespace-pre-wrap break-all ${
                           log.type === "stderr"
-                            ? "text-red-400 font-medium"
+                            ? "text-red-500 dark:text-red-400 font-medium"
                             : log.type === "system"
-                            ? "text-slate-400 italic text-[11px]"
-                            : "text-slate-200"
+                            ? "text-muted-foreground italic text-[11px]"
+                            : "text-foreground"
                         }`}
                       >
-                        {log.type === "system" && <span className="mr-1.5 text-slate-500">❯</span>}
+                        {log.type === "system" && <span className="mr-1.5 text-muted-foreground/60">❯</span>}
                         {log.text}
                       </div>
                     ))
@@ -492,7 +492,7 @@ export default function PlaygroundPage() {
                 </div>
 
                 {/* Terminal Footer */}
-                <div className="border-t border-slate-800 bg-slate-900/40 px-4 py-2 text-[11px] font-mono text-slate-400 flex items-center justify-between">
+                <div className="border-t bg-muted/40 px-4 py-2 text-[11px] font-mono text-muted-foreground flex items-center justify-between">
                   <span>{submissionId ? `Sub ID: ${submissionId}` : "No Active Run"}</span>
                   <span>{logs.filter(l => l.type !== "system").length} output lines</span>
                 </div>
