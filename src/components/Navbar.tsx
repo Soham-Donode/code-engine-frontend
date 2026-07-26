@@ -45,16 +45,16 @@ export function Navbar() {
 
   return (
     <header className={headerClasses}>
-      {/* Inner flex container constrained to max-w-7xl matching all pages */}
+      {/* Inner container constrained to max-w-7xl matching all pages */}
       <div
-        className={`mx-auto flex items-center justify-between transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] max-w-7xl ${
+        className={`relative mx-auto flex items-center justify-between transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] max-w-7xl ${
           isLanding
             ? "bg-transparent border-transparent shadow-none px-6 pt-6 pb-2 sm:px-10"
             : "px-4 py-3 sm:px-6"
         }`}
       >
         {/* Brand Logo */}
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2.5 z-10">
           <Link href="/" className="flex items-center gap-2.5 group">
             <div
               className={`flex h-8 w-8 items-center justify-center rounded-xl transition-all duration-500 shadow-md ${
@@ -75,9 +75,9 @@ export function Navbar() {
           </Link>
         </div>
 
-        {/* Floating / Integrated Center Links */}
+        {/* Floating / Integrated Center Links — Absolutely Centered */}
         <div
-          className={`flex items-center gap-1.5 transition-all duration-500 rounded-xl ${
+          className={`absolute left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 transition-all duration-500 rounded-xl ${
             isLanding
               ? "bg-white/90 backdrop-blur-md p-1.5 rounded-2xl border border-white/80 shadow-lg"
               : "bg-muted/40 p-1 rounded-xl"
@@ -106,7 +106,7 @@ export function Navbar() {
         </div>
 
         {/* Right side — auth + tools */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 z-10">
           {/* Active Session Key indicator */}
           {!isLanding && (
             <>

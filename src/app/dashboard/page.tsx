@@ -155,7 +155,10 @@ export default function DashboardPage() {
             };
           })
         );
-        setKeys(mappedKeys);
+        setKeys((prev) => {
+          const unpersisted = prev.filter((p) => !mappedKeys.some((m) => m.prefix === p.prefix));
+          return [...unpersisted, ...mappedKeys];
+        });
       }
     };
 
@@ -240,7 +243,10 @@ export default function DashboardPage() {
           .select()
           .single();
 
-        if (!error && dbData) {
+        if (error) {
+          console.error("Failed to insert key into Supabase:", error.message);
+          toast.error(`Warning: Key created on backend but failed to persist to DB (${error.message})`);
+        } else if (dbData) {
           newKeyItem.id = dbData.id;
         }
       }
