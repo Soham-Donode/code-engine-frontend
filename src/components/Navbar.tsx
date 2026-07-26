@@ -63,10 +63,10 @@ export function Navbar() {
           </Link>
         </div>
 
-        {/* Center: Absolutely Centered Floating Pill Navigation */}
-        <div className={`absolute left-1/2 -translate-x-1/2 top-6 z-20 hidden md:flex items-center gap-4 backdrop-blur-md px-4 py-2 rounded-full border shadow-lg text-xs font-medium ${
+        {/* Center: Absolutely Centered Floating Squircle Navigation */}
+        <div className={`absolute left-1/2 -translate-x-1/2 top-6 z-20 hidden md:flex items-center gap-1.5 backdrop-blur-md p-1.5 rounded-2xl border shadow-lg text-xs font-medium ${
           isLanding
-            ? "bg-white/85 border-white/60 text-slate-700"
+            ? "bg-white/90 border-white/80 text-slate-700"
             : "bg-card/90 border-border text-muted-foreground"
         }`}>
           {navLinks.map((link) => {
@@ -75,14 +75,14 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`px-3 py-1 rounded-full transition-all duration-150 ${
+                className={`px-4 py-2 rounded-xl transition-all duration-200 ${
                   isActive
                     ? isLanding
-                      ? "bg-slate-900 text-white font-semibold shadow-sm"
-                      : "bg-foreground text-background font-semibold shadow-sm"
+                      ? "bg-slate-900/10 dark:bg-white/20 backdrop-blur-md text-slate-950 font-semibold border border-slate-900/15 dark:border-white/30 shadow-inner"
+                      : "bg-foreground/10 dark:bg-white/15 backdrop-blur-md text-foreground font-semibold border border-foreground/15 dark:border-white/20 shadow-sm"
                     : isLanding
-                      ? "hover:text-slate-950"
-                      : "hover:text-foreground hover:bg-muted/50"
+                      ? "hover:text-slate-950 hover:bg-slate-900/5"
+                      : "hover:text-foreground hover:bg-foreground/5"
                 }`}
               >
                 {link.label}

@@ -103,3 +103,19 @@
     @apply font-sans;
     }
 }
+
+@keyframes slideUpFade {
+  0% {
+    opacity: 0;
+    transform: translateY(100vh);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(16px);
+  }
+}
+
+.animate-slide-up-fade {
+  animation: slideUpFade 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+  opacity: 0;
+}

@@ -11,7 +11,7 @@ export default function LandingPage() {
         {/* Background Landscape Image */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="/hero-landscape.png"
+            src="/bg-image.png"
             alt="Lush Meadow Background"
             fill
             className="object-cover object-bottom"
@@ -22,7 +22,7 @@ export default function LandingPage() {
         </div>
 
         {/* Hero Content Section */}
-        <div className="relative z-10 flex flex-col items-center text-center px-4 pt-16 sm:pt-24 pb-8 space-y-6 max-w-3xl mx-auto">
+        <div className="relative z-10 flex flex-col items-center text-center px-4 pt-28 sm:pt-40 pb-12 space-y-7 max-w-3xl mx-auto">
           {/* Main Headline */}
           <h1 className="text-5xl sm:text-7xl font-serif tracking-tight text-slate-900 leading-[1.08] max-w-3xl font-normal">
             Autopilot for your Code Sandbox. <br />
@@ -40,7 +40,7 @@ export default function LandingPage() {
 
         {/* Bottom Card Mockup Floating in Meadow */}
         <div className="relative z-10 px-4 sm:px-12 pb-0 flex justify-center -mb-8">
-          <div className="w-full max-w-3xl bg-white/95 backdrop-blur-xl rounded-[28px] p-6 sm:p-8 shadow-2xl border border-white/80 space-y-6 transform translate-y-4 hover:translate-y-2 transition-transform duration-300">
+          <div className="w-full max-w-3xl bg-white/95 backdrop-blur-xl rounded-[28px] p-6 sm:p-8 shadow-2xl border border-white/80 space-y-6 animate-slide-up-fade hover:-translate-y-1 transition-transform duration-300">
             
             {/* Card Header */}
             <div className="flex items-center justify-between border-b border-slate-100 pb-4">
@@ -50,59 +50,67 @@ export default function LandingPage() {
                 </div>
                 <div>
                   <h4 className="text-xs font-bold text-slate-900">CodeEngine Sandbox</h4>
-                  <p className="text-[10px] text-slate-400 font-mono">my space • v1.0</p>
+                  <p className="text-[10px] text-slate-400 font-mono">runner-us-east • isolated</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Board:</span>
-                <span className="text-sm font-bold text-slate-900">CRM</span>
-                <span className="text-xs text-slate-400 font-mono">(4)</span>
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Status:</span>
+                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200 flex items-center gap-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" /> Operational
+                </span>
               </div>
             </div>
 
             {/* Card Body Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-              {/* Stats Panel */}
+              {/* Execution Metrics Panel */}
               <div className="md:col-span-5 bg-slate-50/80 rounded-2xl p-4 space-y-4 border border-slate-100">
                 <div className="flex justify-between text-xs text-slate-400 font-medium">
-                  <span>New leads</span>
-                  <span className="font-mono">23</span>
+                  <span>API Requests</span>
+                  <span className="font-mono text-slate-700 font-bold">142.8k</span>
                 </div>
                 <div className="grid grid-cols-3 gap-2 text-center pt-1">
                   <div>
-                    <p className="text-2xl font-bold text-emerald-600">12</p>
-                    <p className="text-[9px] text-slate-400">send request</p>
+                    <p className="text-2xl font-bold text-emerald-600">42ms</p>
+                    <p className="text-[9px] text-slate-400">avg latency</p>
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-slate-900">10</p>
-                    <p className="text-[9px] text-slate-400">in chat now</p>
+                    <p className="text-2xl font-bold text-slate-900">99.9%</p>
+                    <p className="text-[9px] text-slate-400">success rate</p>
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-amber-600">1</p>
-                    <p className="text-[9px] text-slate-400">close chat</p>
+                    <p className="text-2xl font-bold text-indigo-600">3</p>
+                    <p className="text-[9px] text-slate-400">runtimes</p>
                   </div>
                 </div>
                 <div className="border-t border-slate-200/60 pt-3">
                   <div className="flex justify-between text-xs text-slate-400 font-medium">
-                    <span>New clients</span>
-                    <span className="font-mono">3</span>
+                    <span>Active Containers</span>
+                    <span className="font-mono text-slate-700 font-bold">12 / 50</span>
                   </div>
-                  <p className="text-2xl font-bold text-slate-900 mt-1">23 251$</p>
+                  <div className="flex items-center gap-2 mt-2">
+                    <span className="px-2 py-0.5 rounded bg-slate-200 text-slate-700 text-[10px] font-mono font-medium">Python 3.12</span>
+                    <span className="px-2 py-0.5 rounded bg-slate-200 text-slate-700 text-[10px] font-mono font-medium">Node 20</span>
+                    <span className="px-2 py-0.5 rounded bg-slate-200 text-slate-700 text-[10px] font-mono font-medium">GCC 13</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Live Output Simulation */}
+              {/* Live Code Sandbox Output Simulation */}
               <div className="md:col-span-7 bg-slate-900 text-slate-100 rounded-2xl p-4 space-y-3 font-mono text-xs shadow-inner">
                 <div className="flex items-center justify-between text-[10px] text-slate-400 border-b border-slate-800 pb-2">
                   <span className="flex items-center gap-1.5 text-emerald-400">
-                    <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" /> Marcus #SH-24819
+                    <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" /> POST /api/execute
                   </span>
-                  <span>Ready</span>
+                  <span className="text-slate-400">200 OK • 38ms</span>
                 </div>
-                <p className="text-slate-300">Hey, I ordered yesterday. Where is it?</p>
-                <div className="bg-slate-800/60 rounded-xl p-2.5 text-emerald-400 flex items-center justify-between text-[11px]">
-                  <span>Found it ✓</span>
-                  <span className="text-[9px] text-slate-400">Order lookup</span>
+                <p className="text-slate-400 text-[11px]">
+                  <span className="text-purple-400">def</span> <span className="text-blue-300">execute_code</span>(input):<br />
+                  &nbsp;&nbsp;<span className="text-purple-400">return</span> f<span className="text-emerald-300">&quot;Result: &#123;eval(input)&#125;&quot;</span>
+                </p>
+                <div className="bg-slate-800/80 rounded-xl p-2.5 text-emerald-400 flex items-center justify-between text-[11px] border border-slate-700/60">
+                  <span>Output: &quot;Result: 42&quot; ✓</span>
+                  <span className="text-[9px] text-slate-400 font-sans">Exit code: 0</span>
                 </div>
               </div>
             </div>
