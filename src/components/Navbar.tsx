@@ -22,9 +22,11 @@ export function Navbar() {
   const { apiKey, keyPrefix, clearKey } = useApiKey();
   const { user, signOut } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const mounted = useMounted();
 
   const isLanding = pathname === "/";
+  const userInitial = user?.email ? user.email.charAt(0).toUpperCase() : "U";
 
   const handleSignOut = async () => {
     clearKey();
@@ -123,43 +125,6 @@ export function Navbar() {
             </>
           )}
 
-          {/* Auth Status & Log In / Sign Out */}
-          {user ? (
-            <div className="flex items-center gap-2">
-              {!isLanding && (
-                <div className="hidden md:flex items-center gap-1.5 px-3 py-1 rounded-full border border-border bg-card/80 text-xs font-mono text-muted-foreground">
-                  <UserIcon className="h-3.5 w-3.5 text-muted-foreground" />
-                  <span className="max-w-[120px] truncate">{user.email}</span>
-                </div>
-              )}
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleSignOut}
-                className={`h-8 text-xs gap-1 px-3 rounded-full transition-all duration-300 ${
-                  isLanding
-                    ? "text-slate-700 hover:text-slate-900 hover:bg-white/50"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
-                title="Sign Out"
-              >
-                <LogOut className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Sign Out</span>
-              </Button>
-            </div>
-          ) : (
-            <button
-              onClick={() => setAuthModalOpen(true)}
-              className={`text-xs font-semibold px-5 py-2 rounded-xl shadow-md transition-all duration-300 hover:scale-105 active:scale-95 ${
-                isLanding
-                  ? "bg-slate-950 hover:bg-slate-800 text-white"
-                  : "bg-foreground text-background hover:opacity-90"
-              }`}
-            >
-              Log in
-            </button>
-          )}
-
           {/* Theme Toggle */}
           {!isLanding && mounted && (
             <Button
@@ -175,6 +140,70 @@ export function Navbar() {
                 <Moon className="h-4 w-4 text-slate-700" />
               )}
             </Button>
+          )}
+
+          {/* Auth Profile Menu Dropdown */}
+          {user ? (
+            <div className="relative">
+              <button
+                onClick={() => setProfileOpen(!profileOpen)}
+                className={`h-9 w-9 rounded-full flex items-center justify-center font-bold text-xs shadow-sm border transition-all hover:scale-105 active:scale-95 ${
+                  isLanding
+                    ? "bg-slate-900 text-white border-slate-800"
+                    : "bg-foreground text-background border-border"
+                }`}
+                title={user.email || "Account Profile"}
+              >
+                {userInitial}
+              </button>
+
+              {/* Profile Dropdown Popover */}
+              {profileOpen && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setProfileOpen(false)}
+                  />
+                  <div className="absolute right-0 mt-2 w-56 rounded-2xl border border-border bg-card p-3 shadow-xl z-50 space-y-3 backdrop-blur-xl animate-in fade-in zoom-in-95 duration-150">
+                    <div className="flex items-center gap-2.5 px-2 pt-1 border-b border-border/50 pb-2.5">
+                      <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs">
+                        {userInitial}
+                      </div>
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-xs font-semibold text-foreground truncate">
+                          {user.email?.split("@")[0]}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground truncate font-mono">
+                          {user.email}
+                        </span>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => {
+                        setProfileOpen(false);
+                        handleSignOut();
+                      }}
+                      className="w-full flex items-center gap-2 px-2.5 py-1.5 rounded-xl text-xs font-medium text-red-600 dark:text-red-400 hover:bg-red-500/10 transition-colors"
+                    >
+                      <LogOut className="h-3.5 w-3.5" />
+                      <span>Sign Out</span>
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          ) : (
+            <button
+              onClick={() => setAuthModalOpen(true)}
+              className={`text-xs font-semibold px-5 py-2 rounded-xl shadow-md transition-all duration-300 hover:scale-105 active:scale-95 ${
+                isLanding
+                  ? "bg-slate-950 hover:bg-slate-800 text-white"
+                  : "bg-foreground text-background hover:opacity-90"
+              }`}
+            >
+              Log in
+            </button>
           )}
         </div>
       </div>

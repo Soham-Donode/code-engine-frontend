@@ -76,7 +76,7 @@ interface UsageStats {
 
 export default function DashboardPage() {
   const { keyPrefix, setKeyDetails, clearKey } = useApiKey();
-  const { user, isConfigured: isSupabaseReady } = useAuth();
+  const { user, session, isConfigured: isSupabaseReady } = useAuth();
 
   // Keys list & search state
   const [keys, setKeys] = useState<ManagedKey[]>([]);
@@ -163,16 +163,35 @@ export default function DashboardPage() {
   const handleCreateKeySubmit = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     const name = newKeyName.trim() || "unnamed-key";
+    if (keys.length >= 5) {
+      toast.error("Maximum limit reached: You can only have up to 5 active API keys.");
+      return;
+    }
+
     setIsGenerating(true);
 
     try {
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (session?.access_token) {
+        headers["Authorization"] = `Bearer ${session.access_token}`;
+      }
+
       const res = await fetch(`${apiBaseUrl}/api/keys`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({ name, expires: newKeyExpiry }),
       });
 
       if (!res.ok) {
+        if (res.status === 401) {
+          throw new Error("Authentication required. Please sign in to create API keys.");
+        }
+        if (res.status === 403) {
+          throw new Error("Maximum key limit reached. You can only create up to 5 API keys.");
+        }
+        if (res.status === 429) {
+          throw new Error("Key generation rate limit reached. Please wait before creating more keys.");
+        }
         throw new Error(`Server returned status ${res.status}`);
       }
 
@@ -341,13 +360,18 @@ export default function DashboardPage() {
                   setIsAuthModalOpen(true);
                   return;
                 }
+                if (keys.length >= 5) {
+                  toast.error("Maximum limit reached: You can only have up to 5 active API keys.");
+                  return;
+                }
                 setNewlyCreatedKey(null);
                 setIsCreateOpen(true);
               }}
-              className="bg-foreground text-background hover:bg-foreground/90 font-semibold text-xs gap-1.5 px-3.5 h-8 rounded-lg"
+              disabled={keys.length >= 5}
+              className="bg-foreground text-background hover:bg-foreground/90 font-semibold text-xs gap-1.5 px-3.5 h-8 rounded-lg disabled:opacity-50"
             >
               <Plus className="h-4 w-4 stroke-[2]" />
-              New Key
+              New Key ({keys.length}/5)
             </Button>
           </div>
         </div>
