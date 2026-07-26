@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Geist_Mono } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { ApiKeyProvider } from "@/context/ApiKeyContext";
 import { Navbar } from "@/components/Navbar";
 import { Toaster } from "@/components/ui/sonner";
 
-const geistSans = Geist({
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 });
@@ -29,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={cn("font-sans", geistSans.variable, geistMono.variable)}>
+    <html lang="en" suppressHydrationWarning className={cn("font-sans", inter.variable, geistMono.variable)}>
       <body className="min-h-screen bg-background font-sans text-foreground antialiased selection:bg-primary/20">
         <ThemeProvider
           attribute="class"
