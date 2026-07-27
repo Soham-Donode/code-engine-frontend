@@ -334,10 +334,10 @@ export default function PlaygroundPage() {
             </div>
 
             {/* Language Selector */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
               <Code2 className="h-4 w-4 text-muted-foreground shrink-0" />
               <Select value={language} onValueChange={(val) => handleLanguageChange(val as Language)}>
-                <SelectTrigger className="w-[160px] font-mono text-xs h-[44px] px-4 rounded-full border border-border bg-background text-foreground focus:ring-0 focus:outline-none">
+                <SelectTrigger className="w-full sm:w-[160px] font-mono text-xs h-[44px] px-4 rounded-full border border-border bg-background text-foreground focus:ring-0 focus:outline-none">
                   <SelectValue placeholder="Select Language" />
                 </SelectTrigger>
                 <SelectContent className="rounded-2xl border-border bg-card shadow-xl p-1 font-mono text-xs">
@@ -350,9 +350,9 @@ export default function PlaygroundPage() {
           </div>
 
           {/* Right: Remaining Quota & Run Button */}
-          <div className="flex items-center justify-between gap-3 sm:justify-end">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:justify-end">
             {remainingQuota !== null && (
-              <div className="flex items-center gap-1.5 font-mono text-xs text-muted-foreground border-r border-border pr-3">
+              <div className="flex items-center justify-center sm:justify-start gap-1.5 font-mono text-xs text-muted-foreground sm:border-r border-border sm:pr-3">
                 <span>Quota:</span>
                 <span className="font-semibold text-foreground">{remainingQuota}/100</span>
               </div>
@@ -361,7 +361,7 @@ export default function PlaygroundPage() {
             <button
               onClick={handleRun}
               disabled={isExecuting || !inputKey.trim()}
-              className="h-[44px] px-6 rounded-full bg-slate-950 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-slate-950 font-semibold text-xs transition-all flex items-center gap-2 shadow-sm disabled:opacity-50 hover:scale-105 active:scale-95"
+              className="w-full sm:w-auto h-[44px] px-6 rounded-full bg-slate-950 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-200 text-white dark:text-slate-950 font-semibold text-xs transition-all flex items-center justify-center gap-2 shadow-sm disabled:opacity-50 hover:scale-105 active:scale-95"
             >
               {isExecuting ? (
                 <>
@@ -382,7 +382,7 @@ export default function PlaygroundPage() {
         <div className="grid gap-5 lg:grid-cols-12">
           {/* Code Editor (Left 7 Cols) */}
           <div className="flex flex-col lg:col-span-7">
-            <Card className="rounded-[20px] border border-border bg-card shadow-sm flex flex-col overflow-hidden h-full min-h-[560px]">
+            <Card className="rounded-[20px] border border-border bg-card shadow-sm flex flex-col overflow-hidden h-full min-h-[380px] sm:min-h-[560px]">
               <CardHeader className="py-3 px-5 border-b border-border bg-muted/30 flex flex-row items-center justify-between space-y-0">
                 <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground">
                   <FileCode className="h-4 w-4 text-muted-foreground" />
@@ -399,7 +399,7 @@ export default function PlaygroundPage() {
                 </Button>
               </CardHeader>
               <CardContent className="p-0 flex-1">
-                <div className="h-full min-h-[500px] w-full">
+                <div className="h-full min-h-[340px] sm:min-h-[500px] w-full">
                   <Editor
                     height="100%"
                     language={language === "cpp" ? "cpp" : language === "javascript" ? "javascript" : "python"}

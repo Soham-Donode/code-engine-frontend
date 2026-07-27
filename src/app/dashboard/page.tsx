@@ -432,8 +432,8 @@ export default function DashboardPage() {
           </div>
         ) : (
           <div className="rounded-xl border bg-card shadow-sm">
-            <div className="w-full overflow-visible">
-              <table className="w-full text-left text-xs">
+            <div className="w-full overflow-x-auto">
+              <table className="w-full text-left text-xs min-w-[640px]">
                 <thead>
                   <tr className="border-b bg-muted/40 text-muted-foreground font-medium">
                     <th className="py-3 px-4 w-10">

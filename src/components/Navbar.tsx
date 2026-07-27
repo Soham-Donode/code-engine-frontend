@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTheme } from "next-themes";
-import { Moon, Sun, Zap, User as UserIcon, LogOut, LogIn } from "lucide-react";
+import { Moon, Sun, Zap, LogOut, Menu, X, LayoutDashboard, Play, BookOpen, KeyRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApiKey } from "@/context/ApiKeyContext";
 import { useAuth } from "@/context/AuthContext";
@@ -23,10 +23,16 @@ export function Navbar() {
   const { user, signOut } = useAuth();
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const mounted = useMounted();
 
   const isLanding = pathname === "/";
   const userInitial = user?.email ? user.email.charAt(0).toUpperCase() : "U";
+
+  // Close mobile menu when pathname changes
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [pathname]);
 
   const handleSignOut = async () => {
     clearKey();
@@ -34,9 +40,9 @@ export function Navbar() {
   };
 
   const navLinks = [
-    { href: "/dashboard", label: "Dashboard" },
-    { href: "/playground", label: "Playground" },
-    { href: "/docs", label: "API Reference" },
+    { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { href: "/playground", label: "Playground", icon: Play },
+    { href: "/docs", label: "API Reference", icon: BookOpen },
   ];
 
   const headerClasses = isLanding
@@ -45,16 +51,16 @@ export function Navbar() {
 
   return (
     <header className={headerClasses}>
-      {/* Inner container constrained to max-w-7xl matching all pages */}
+      {/* Inner container */}
       <div
         className={`relative mx-auto flex items-center justify-between transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] max-w-7xl ${
           isLanding
-            ? "bg-transparent border-transparent shadow-none px-6 pt-6 pb-2 sm:px-10"
+            ? "bg-transparent border-transparent shadow-none px-4 pt-5 pb-2 sm:px-8 sm:pt-6"
             : "px-4 py-3 sm:px-6"
         }`}
       >
         {/* Brand Logo */}
-        <div className="flex items-center gap-2.5 z-10">
+        <div className="flex items-center gap-2.5 z-10 shrink-0">
           <Link href="/" className="flex items-center gap-2.5 group">
             <div
               className={`flex h-8 w-8 items-center justify-center rounded-xl transition-all duration-500 shadow-md ${
@@ -75,9 +81,9 @@ export function Navbar() {
           </Link>
         </div>
 
-        {/* Floating / Integrated Center Links — Absolutely Centered */}
+        {/* Desktop Centered Navigation Pill (Hidden on Mobile) */}
         <div
-          className={`absolute left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 transition-all duration-500 rounded-xl ${
+          className={`hidden md:flex absolute left-1/2 -translate-x-1/2 z-10 items-center gap-1.5 transition-all duration-500 rounded-xl ${
             isLanding
               ? "bg-white/90 backdrop-blur-md p-1.5 rounded-2xl border border-white/80 shadow-lg"
               : "bg-muted/40 p-1 rounded-xl"
@@ -105,19 +111,19 @@ export function Navbar() {
           })}
         </div>
 
-        {/* Right side — auth + tools */}
-        <div className="flex items-center gap-3 z-10">
+        {/* Right side controls */}
+        <div className="flex items-center gap-2.5 sm:gap-3 z-10 shrink-0">
           {/* Active Session Key indicator */}
           {!isLanding && (
             <>
               {apiKey ? (
-                <div className="hidden sm:flex items-center gap-2 border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 rounded-full text-xs font-mono text-emerald-600 dark:text-emerald-400">
+                <div className="hidden lg:flex items-center gap-2 border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 rounded-full text-xs font-mono text-emerald-600 dark:text-emerald-400">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse" />
                   <span className="text-[11px] font-medium opacity-80">Active:</span>
                   <span>{keyPrefix ? `${keyPrefix}...` : "Key Active"}</span>
                 </div>
               ) : (
-                <div className="hidden sm:flex items-center gap-2 border border-border bg-card/80 px-3 py-1 rounded-full text-xs font-mono text-muted-foreground">
+                <div className="hidden lg:flex items-center gap-2 border border-border bg-card/80 px-3 py-1 rounded-full text-xs font-mono text-muted-foreground">
                   <span className="h-1.5 w-1.5 rounded-full bg-muted-foreground/50" />
                   <span className="text-[11px]">No Active Key</span>
                 </div>
@@ -142,12 +148,12 @@ export function Navbar() {
             </Button>
           )}
 
-          {/* Auth Profile Menu Dropdown */}
+          {/* Auth Profile / Login Button */}
           {user ? (
             <div className="relative">
               <button
                 onClick={() => setProfileOpen(!profileOpen)}
-                className={`h-9 w-9 rounded-full flex items-center justify-center font-bold text-xs shadow-sm border transition-all hover:scale-105 active:scale-95 ${
+                className={`h-8 w-8 sm:h-9 sm:w-9 rounded-full flex items-center justify-center font-bold text-xs shadow-sm border transition-all hover:scale-105 active:scale-95 ${
                   isLanding
                     ? "bg-slate-900 text-white border-slate-800"
                     : "bg-foreground text-background border-border"
@@ -196,7 +202,7 @@ export function Navbar() {
           ) : (
             <button
               onClick={() => setAuthModalOpen(true)}
-              className={`text-xs font-semibold px-5 py-2 rounded-xl shadow-md transition-all duration-300 hover:scale-105 active:scale-95 ${
+              className={`text-xs font-semibold px-4 py-2 sm:px-5 sm:py-2 rounded-xl shadow-md transition-all duration-300 hover:scale-105 active:scale-95 ${
                 isLanding
                   ? "bg-slate-950 hover:bg-slate-800 text-white"
                   : "bg-foreground text-background hover:opacity-90"
@@ -205,11 +211,66 @@ export function Navbar() {
               Log in
             </button>
           )}
+
+          {/* Mobile Hamburger Toggle Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className={`md:hidden flex h-8 w-8 items-center justify-center rounded-xl border transition-all ${
+              isLanding
+                ? "bg-white/80 border-slate-200 text-slate-900 shadow-sm"
+                : "bg-card border-border text-foreground"
+            }`}
+            aria-label="Toggle Navigation Menu"
+          >
+            {mobileMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile Slide-Down Glassmorphic Drawer Panel */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-b border-border/80 bg-card/95 backdrop-blur-2xl px-4 py-4 space-y-3 shadow-2xl animate-in slide-in-from-top-2 duration-200">
+          <div className="space-y-1">
+            {navLinks.map((link) => {
+              const Icon = link.icon;
+              const isActive = pathname === link.href;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                    isActive
+                      ? isLanding
+                        ? "bg-slate-900 text-white shadow-sm"
+                        : "bg-primary text-primary-foreground shadow-sm"
+                      : "text-foreground hover:bg-muted"
+                  }`}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span>{link.label}</span>
+                </Link>
+              );
+            })}
+          </div>
+
+          {!isLanding && apiKey && (
+            <div className="pt-2 border-t border-border/60">
+              <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs font-mono text-emerald-600 dark:text-emerald-400">
+                <span className="flex items-center gap-2">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span>Active Key</span>
+                </span>
+                <span>{keyPrefix ? `${keyPrefix}...` : "Active"}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Auth Modal */}
       <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
     </header>
   );
 }
+

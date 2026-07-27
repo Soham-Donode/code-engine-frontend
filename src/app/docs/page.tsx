@@ -22,6 +22,13 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "sonner";
 
 export default function DocsPage() {
@@ -230,16 +237,41 @@ executeCode();`;
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans antialiased">
+      {/* Mobile Sticky Section Navigation Selector */}
+      <div className="lg:hidden sticky top-[57px] z-30 bg-card/95 backdrop-blur-xl border-b border-border py-2.5 px-4 flex items-center gap-3 shadow-sm">
+        <Select
+          value={activeSection}
+          onValueChange={(val: string | null) => {
+            if (val) {
+              setActiveSection(val);
+              const el = document.getElementById(val);
+              if (el) el.scrollIntoView({ behavior: "smooth" });
+            }
+          }}
+        >
+          <SelectTrigger className="w-full font-mono text-xs h-9 rounded-xl border border-border bg-background">
+            <SelectValue placeholder="Jump to section..." />
+          </SelectTrigger>
+          <SelectContent className="rounded-2xl border-border bg-card shadow-xl p-1 font-mono text-xs">
+            {tocItems.map((item) => (
+              <SelectItem key={item.id} value={item.id} className="rounded-xl cursor-pointer">
+                {item.title}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
       {/* Main 3-Column Docs Grid Layout */}
-      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
-        <div className="grid gap-10 lg:grid-cols-12">
-          {/* Left Navigation Sidebar */}
-          <aside className="lg:col-span-3">
+      <div className="mx-auto max-w-7xl px-4 py-6 sm:py-10 sm:px-6 overflow-hidden">
+        <div className="grid gap-8 lg:gap-10 lg:grid-cols-12 min-w-0">
+          {/* Left Navigation Sidebar (Desktop Only) */}
+          <aside className="hidden lg:block lg:col-span-3">
             <div className="sticky top-20 space-y-6">
               {/* Top Quick Link Button */}
               <Link
                 href="/playground"
-                className="flex items-center gap-2.5 rounded-lg bg-muted px-3.5 py-2 text-xs font-medium text-muted-foreground border transition-colors hover:bg-muted/80 hover:text-foreground"
+                className="flex items-center gap-2.5 rounded-lg bg-muted px-3.5 py-2 text-xs font-medium text-muted-foreground border transition-colors hover:bg-muted/80 hover:text-foreground w-full justify-start"
               >
                 <Play className="h-3.5 w-3.5 text-emerald-500" />
                 <span>Try Live Playground</span>
@@ -279,7 +311,7 @@ executeCode();`;
           </aside>
 
           {/* Center Main Content Area */}
-          <main className="space-y-10 lg:col-span-6">
+          <main className="space-y-8 sm:space-y-10 lg:col-span-6 min-w-0 w-full overflow-hidden">
             {/* Document Header Title Section */}
             <div className="space-y-2">
               <div className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
@@ -287,10 +319,10 @@ executeCode();`;
                 <span>/</span>
                 <span className="text-foreground font-medium">API Reference</span>
               </div>
-              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+              <h1 className="text-2xl sm:text-4xl font-bold tracking-tight">
                 CodeEngine API Documentation
               </h1>
-              <p className="text-sm text-muted-foreground leading-relaxed max-w-2xl">
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed max-w-2xl">
                 Complete API reference for submitting code payloads, running sandboxed Python, C++, and Node.js code, and streaming output via SSE.
               </p>
             </div>
@@ -337,9 +369,9 @@ executeCode();`;
 
             {/* Section 1: Quick Start */}
             <section id="quickstart" className="space-y-4 scroll-mt-32 pt-6 border-t">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <h2 className="text-xl font-bold tracking-tight">Quick Start</h2>
-                <div className="flex items-center gap-1.5 bg-muted p-1 rounded-lg">
+                <div className="flex items-center gap-1.5 bg-muted p-1 rounded-lg self-start sm:self-auto">
                   <button
                     onClick={() => setActiveLang("curl")}
                     className={`px-2.5 py-1 text-[11px] font-medium rounded-md transition-colors ${
@@ -371,11 +403,11 @@ executeCode();`;
                 <code className="font-mono bg-muted px-1.5 py-0.5 rounded border text-foreground">YOUR_API_KEY</code> with a key from your dashboard.
               </p>
 
-              <div className="relative rounded-xl border bg-muted/60 dark:bg-[#070A10] p-4 font-mono text-xs shadow-inner">
+              <div className="relative rounded-xl border bg-muted/60 dark:bg-[#070A10] p-4 font-mono text-xs shadow-inner w-full max-w-full overflow-hidden min-w-0">
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="absolute right-3 top-3 h-7 w-7 text-muted-foreground hover:text-foreground rounded-md"
+                  className="absolute right-3 top-3 h-7 w-7 text-muted-foreground hover:text-foreground rounded-md z-10"
                   onClick={() =>
                     handleCopy(
                       "quickstart",
@@ -393,7 +425,7 @@ executeCode();`;
                     <Copy className="h-3.5 w-3.5" />
                   )}
                 </Button>
-                <pre className="overflow-x-auto whitespace-pre leading-relaxed text-foreground">
+                <pre className="overflow-x-auto whitespace-pre leading-relaxed text-foreground pr-8 max-w-full">
                   {activeLang === "curl" && quickstartCurl}
                   {activeLang === "python" && quickstartPython}
                   {activeLang === "node" && quickstartNode}
@@ -436,14 +468,14 @@ executeCode();`;
                 </div>
               </div>
 
-              <div className="rounded-xl border bg-card p-4 text-xs space-y-3 font-mono shadow-sm">
-                <div className="flex items-center justify-between border-b pb-2.5">
-                  <span className="text-muted-foreground">HTTP Request Header:</span>
-                  <code className="font-semibold text-emerald-600 dark:text-emerald-400">X-API-Key: ce_...</code>
+              <div className="rounded-xl border bg-card p-4 text-xs space-y-3 font-mono shadow-sm overflow-x-auto max-w-full">
+                <div className="flex items-center justify-between gap-4 border-b pb-2.5 min-w-[280px]">
+                  <span className="text-muted-foreground shrink-0">HTTP Request Header:</span>
+                  <code className="font-semibold text-emerald-600 dark:text-emerald-400 truncate">X-API-Key: ce_...</code>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-muted-foreground">SSE Query Parameter:</span>
-                  <code className="font-semibold text-emerald-600 dark:text-emerald-400">?api_key=ce_...</code>
+                <div className="flex items-center justify-between gap-4 min-w-[280px]">
+                  <span className="text-muted-foreground shrink-0">SSE Query Parameter:</span>
+                  <code className="font-semibold text-emerald-600 dark:text-emerald-400 truncate">?api_key=ce_...</code>
                 </div>
               </div>
             </section>
@@ -464,26 +496,33 @@ executeCode();`;
 
               <div className="space-y-2">
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Request Body Schema</h3>
-                <div className="rounded-xl border bg-card p-4 space-y-2 text-xs font-mono">
-                  <div className="grid grid-cols-12 gap-2 border-b pb-2 text-muted-foreground">
-                    <span className="col-span-3 font-bold">Field</span>
-                    <span className="col-span-3 font-bold">Type</span>
-                    <span className="col-span-6 font-bold">Description</span>
+                <div className="rounded-xl border bg-card p-4 space-y-3 text-xs font-mono overflow-x-auto max-w-full">
+                  <div className="space-y-2 border-b pb-2 min-w-[280px]">
+                    <div className="flex items-center justify-between text-muted-foreground text-[10px] uppercase font-bold">
+                      <span>Field</span>
+                      <span>Type</span>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-12 gap-2">
-                    <span className="col-span-3 font-bold text-foreground">language</span>
-                    <span className="col-span-3 text-purple-600 dark:text-purple-400">string</span>
-                    <span className="col-span-6 text-muted-foreground">&apos;python&apos; | &apos;cpp&apos; | &apos;javascript&apos;</span>
+                  <div className="space-y-1 min-w-[280px]">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-foreground">language</span>
+                      <span className="text-purple-600 dark:text-purple-400 font-semibold">string</span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground font-sans">&apos;python&apos; | &apos;cpp&apos; | &apos;javascript&apos;</p>
                   </div>
-                  <div className="grid grid-cols-12 gap-2">
-                    <span className="col-span-3 font-bold text-foreground">code</span>
-                    <span className="col-span-3 text-purple-600 dark:text-purple-400">string</span>
-                    <span className="col-span-6 text-muted-foreground">Source code string to execute</span>
+                  <div className="space-y-1 pt-1 border-t border-border/40 min-w-[280px]">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-foreground">code</span>
+                      <span className="text-purple-600 dark:text-purple-400 font-semibold">string</span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground font-sans">Source code string to execute in sandbox</p>
                   </div>
-                  <div className="grid grid-cols-12 gap-2">
-                    <span className="col-span-3 font-bold text-foreground">input</span>
-                    <span className="col-span-3 text-purple-600 dark:text-purple-400">string (optional)</span>
-                    <span className="col-span-6 text-muted-foreground">STDIN string input provided to script</span>
+                  <div className="space-y-1 pt-1 border-t border-border/40 min-w-[280px]">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-foreground">input</span>
+                      <span className="text-purple-600 dark:text-purple-400 font-semibold">string (optional)</span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground font-sans">STDIN string input provided to script</p>
                   </div>
                 </div>
               </div>
@@ -491,11 +530,11 @@ executeCode();`;
               <div className="space-y-3 pt-2">
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Response Payloads by Key Type</h3>
                 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 min-w-0">
+                  <div className="space-y-1.5 min-w-0">
                     <span className="text-xs font-semibold text-purple-600 dark:text-purple-400 font-mono">1. Direct Output Key Response:</span>
-                    <div className="rounded-xl border bg-muted/60 dark:bg-[#070A10] p-3 font-mono text-xs">
-                      <pre className="text-purple-600 dark:text-purple-400 leading-relaxed overflow-x-auto">{`{
+                    <div className="rounded-xl border bg-muted/60 dark:bg-[#070A10] p-3 font-mono text-xs overflow-hidden max-w-full">
+                      <pre className="text-purple-600 dark:text-purple-400 leading-relaxed overflow-x-auto max-w-full">{`{
   "submission_id": "178508...",
   "status": "completed",
   "stdout": "Hello World!\\n",
@@ -505,10 +544,10 @@ executeCode();`;
                     </div>
                   </div>
 
-                  <div className="space-y-1.5">
+                  <div className="space-y-1.5 min-w-0">
                     <span className="text-xs font-semibold text-blue-600 dark:text-blue-400 font-mono">2. Stream Status Key Response:</span>
-                    <div className="rounded-xl border bg-muted/60 dark:bg-[#070A10] p-3 font-mono text-xs">
-                      <pre className="text-blue-600 dark:text-blue-400 leading-relaxed overflow-x-auto">{`{
+                    <div className="rounded-xl border bg-muted/60 dark:bg-[#070A10] p-3 font-mono text-xs overflow-hidden max-w-full">
+                      <pre className="text-blue-600 dark:text-blue-400 leading-relaxed overflow-x-auto max-w-full">{`{
   "submission_id": "178508..."
 }`}</pre>
                     </div>
@@ -531,9 +570,9 @@ executeCode();`;
                 Connects to a real-time output stream for the given <code className="font-mono bg-muted px-1 rounded border">submission_id</code> using Server-Sent Events (SSE).
               </p>
 
-              <div className="relative rounded-xl border bg-muted/60 dark:bg-[#070A10] p-4 font-mono text-xs">
+              <div className="relative rounded-xl border bg-muted/60 dark:bg-[#070A10] p-4 font-mono text-xs overflow-hidden max-w-full">
                 <div className="text-muted-foreground mb-2 text-[11px] font-semibold border-b border-border/50 pb-1">Sample SSE Event Payload:</div>
-                <pre className="overflow-x-auto whitespace-pre leading-relaxed text-emerald-600 dark:text-emerald-400">{`data: {"status":"running","stdout":"Hello World!\\n","stderr":"","exit_code":null}
+                <pre className="overflow-x-auto whitespace-pre leading-relaxed text-emerald-600 dark:text-emerald-400 max-w-full">{`data: {"status":"running","stdout":"Hello World!\\n","stderr":"","exit_code":null}
 data: {"status":"completed","stdout":"","stderr":"","exit_code":0}`}</pre>
               </div>
             </section>
@@ -545,11 +584,11 @@ data: {"status":"completed","stdout":"","stderr":"","exit_code":0}`}</pre>
                 Full example to submit a C++ payload and listen to real-time logs via cURL:
               </p>
 
-              <div className="relative rounded-xl border bg-muted/60 dark:bg-[#070A10] p-4 font-mono text-xs">
+              <div className="relative rounded-xl border bg-muted/60 dark:bg-[#070A10] p-4 font-mono text-xs overflow-hidden max-w-full">
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="absolute right-3 top-3 h-7 w-7 text-muted-foreground hover:text-foreground rounded-md"
+                  className="absolute right-3 top-3 h-7 w-7 text-muted-foreground hover:text-foreground rounded-md z-10"
                   onClick={() => handleCopy("curlexample", quickstartCurl)}
                 >
                   {copiedId === "curlexample" ? (
@@ -558,7 +597,7 @@ data: {"status":"completed","stdout":"","stderr":"","exit_code":0}`}</pre>
                     <Copy className="h-3.5 w-3.5" />
                   )}
                 </Button>
-                <pre className="overflow-x-auto whitespace-pre leading-relaxed text-foreground">{quickstartCurl}</pre>
+                <pre className="overflow-x-auto whitespace-pre leading-relaxed text-foreground max-w-full pr-8">{quickstartCurl}</pre>
               </div>
             </section>
 
@@ -569,11 +608,11 @@ data: {"status":"completed","stdout":"","stderr":"","exit_code":0}`}</pre>
                 Complete Python script using <code className="font-mono bg-muted px-1 rounded border">requests</code> and <code className="font-mono bg-muted px-1 rounded border">sseclient-py</code> to submit code and stream execution logs.
               </p>
 
-              <div className="relative rounded-xl border bg-muted/60 dark:bg-[#070A10] p-4 font-mono text-xs">
+              <div className="relative rounded-xl border bg-muted/60 dark:bg-[#070A10] p-4 font-mono text-xs overflow-hidden max-w-full">
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="absolute right-3 top-3 h-7 w-7 text-muted-foreground hover:text-foreground rounded-md"
+                  className="absolute right-3 top-3 h-7 w-7 text-muted-foreground hover:text-foreground rounded-md z-10"
                   onClick={() => handleCopy("pythonfull", pythonFullExample)}
                 >
                   {copiedId === "pythonfull" ? (
@@ -582,7 +621,7 @@ data: {"status":"completed","stdout":"","stderr":"","exit_code":0}`}</pre>
                     <Copy className="h-3.5 w-3.5" />
                   )}
                 </Button>
-                <pre className="overflow-x-auto whitespace-pre leading-relaxed text-foreground">{pythonFullExample}</pre>
+                <pre className="overflow-x-auto whitespace-pre leading-relaxed text-foreground max-w-full pr-8">{pythonFullExample}</pre>
               </div>
             </section>
 
@@ -593,11 +632,11 @@ data: {"status":"completed","stdout":"","stderr":"","exit_code":0}`}</pre>
                 Complete JavaScript integration using standard <code className="font-mono bg-muted px-1 rounded border">fetch</code> and <code className="font-mono bg-muted px-1 rounded border">EventSource</code> API.
               </p>
 
-              <div className="relative rounded-xl border bg-muted/60 dark:bg-[#070A10] p-4 font-mono text-xs">
+              <div className="relative rounded-xl border bg-muted/60 dark:bg-[#070A10] p-4 font-mono text-xs overflow-hidden max-w-full">
                 <Button
                   size="icon"
                   variant="ghost"
-                  className="absolute right-3 top-3 h-7 w-7 text-muted-foreground hover:text-foreground rounded-md"
+                  className="absolute right-3 top-3 h-7 w-7 text-muted-foreground hover:text-foreground rounded-md z-10"
                   onClick={() => handleCopy("nodefull", nodeFullExample)}
                 >
                   {copiedId === "nodefull" ? (
@@ -606,7 +645,7 @@ data: {"status":"completed","stdout":"","stderr":"","exit_code":0}`}</pre>
                     <Copy className="h-3.5 w-3.5" />
                   )}
                 </Button>
-                <pre className="overflow-x-auto whitespace-pre leading-relaxed text-foreground">{nodeFullExample}</pre>
+                <pre className="overflow-x-auto whitespace-pre leading-relaxed text-foreground max-w-full pr-8">{nodeFullExample}</pre>
               </div>
             </section>
 
@@ -617,8 +656,8 @@ data: {"status":"completed","stdout":"","stderr":"","exit_code":0}`}</pre>
                 Every API key is provisioned with a flat quota of <strong>100 requests per day</strong>. Counters reset automatically 24 hours after key creation.
               </p>
 
-              <div className="rounded-xl border bg-muted/60 dark:bg-[#070A10] p-4 font-mono text-xs text-amber-600 dark:text-amber-400">
-                <pre className="overflow-x-auto whitespace-pre">{`{
+              <div className="rounded-xl border bg-muted/60 dark:bg-[#070A10] p-4 font-mono text-xs text-amber-600 dark:text-amber-400 overflow-hidden max-w-full">
+                <pre className="overflow-x-auto whitespace-pre max-w-full">{`{
   "error": "Rate limit exceeded",
   "limit": 100,
   "requests_today": 100,

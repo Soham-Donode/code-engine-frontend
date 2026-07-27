@@ -22,9 +22,9 @@ export default function LandingPage() {
         </div>
 
         {/* Hero Content Section */}
-        <div className="relative z-10 flex flex-col items-center text-center px-4 pt-28 sm:pt-40 pb-12 space-y-7 max-w-3xl mx-auto">
+        <div className="relative z-10 flex flex-col items-center text-center px-4 pt-24 sm:pt-36 pb-8 sm:pb-12 space-y-6 sm:space-y-7 max-w-3xl mx-auto">
           {/* Main Headline */}
-          <h1 className="text-5xl sm:text-7xl font-serif tracking-tight text-slate-900 leading-[1.08] max-w-3xl font-normal">
+          <h1 className="text-3xl sm:text-5xl lg:text-7xl font-serif tracking-tight text-slate-900 leading-[1.12] sm:leading-[1.08] max-w-3xl font-normal">
             Autopilot for your Code Sandbox. <br />
             <span>Scale effortlessly</span>
           </h1>
@@ -32,18 +32,18 @@ export default function LandingPage() {
           {/* Primary Call To Action */}
           <Link
             href="/dashboard"
-            className="mt-4 bg-slate-950 hover:bg-slate-800 text-white text-sm font-medium px-9 py-3.5 rounded-2xl shadow-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+            className="mt-2 sm:mt-4 bg-slate-950 hover:bg-slate-800 text-white text-xs sm:text-sm font-medium px-7 sm:px-9 py-3 sm:py-3.5 rounded-2xl shadow-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
           >
             Get Started
           </Link>
         </div>
 
         {/* Bottom Card Mockup Floating in Meadow */}
-        <div className="relative z-10 px-4 sm:px-12 pb-0 flex justify-center -mb-8">
-          <div className="w-full max-w-3xl bg-white/95 backdrop-blur-xl rounded-[28px] p-6 sm:p-8 shadow-2xl border border-white/80 space-y-6 animate-slide-up-fade hover:-translate-y-1 transition-transform duration-300">
+        <div className="relative z-10 px-3 sm:px-12 pb-0 flex justify-center -mb-8">
+          <div className="w-full max-w-3xl bg-white/95 backdrop-blur-xl rounded-[24px] sm:rounded-[28px] p-4 sm:p-8 shadow-2xl border border-white/80 space-y-5 sm:space-y-6 animate-slide-up-fade hover:-translate-y-1 transition-transform duration-300">
             
             {/* Card Header */}
-            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 border-b border-slate-100 pb-4">
               <div className="flex items-center gap-3">
                 <div className="h-9 w-9 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs">
                   CE
@@ -53,9 +53,9 @@ export default function LandingPage() {
                   <p className="text-[10px] text-slate-400 font-mono">runner-us-east • isolated</p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Status:</span>
-                <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200 flex items-center gap-1">
+              <div className="flex items-center gap-2 self-end sm:self-auto">
+                <span className="text-[10px] sm:text-xs font-bold text-slate-400 uppercase tracking-wider">Status:</span>
+                <span className="text-[10px] sm:text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200 flex items-center gap-1">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" /> Operational
                 </span>
               </div>
@@ -71,15 +71,15 @@ export default function LandingPage() {
                 </div>
                 <div className="grid grid-cols-3 gap-2 text-center pt-1">
                   <div>
-                    <p className="text-2xl font-bold text-emerald-600">42ms</p>
+                    <p className="text-xl sm:text-2xl font-bold text-emerald-600">42ms</p>
                     <p className="text-[9px] text-slate-400">avg latency</p>
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-slate-900">99.9%</p>
+                    <p className="text-xl sm:text-2xl font-bold text-slate-900">99.9%</p>
                     <p className="text-[9px] text-slate-400">success rate</p>
                   </div>
                   <div>
-                    <p className="text-2xl font-bold text-indigo-600">3</p>
+                    <p className="text-xl sm:text-2xl font-bold text-indigo-600">3</p>
                     <p className="text-[9px] text-slate-400">runtimes</p>
                   </div>
                 </div>
@@ -88,7 +88,7 @@ export default function LandingPage() {
                     <span>Active Containers</span>
                     <span className="font-mono text-slate-700 font-bold">12 / 50</span>
                   </div>
-                  <div className="flex items-center gap-2 mt-2">
+                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-2">
                     <span className="px-2 py-0.5 rounded bg-slate-200 text-slate-700 text-[10px] font-mono font-medium">Python 3.12</span>
                     <span className="px-2 py-0.5 rounded bg-slate-200 text-slate-700 text-[10px] font-mono font-medium">Node 20</span>
                     <span className="px-2 py-0.5 rounded bg-slate-200 text-slate-700 text-[10px] font-mono font-medium">GCC 13</span>
@@ -104,7 +104,7 @@ export default function LandingPage() {
                   </span>
                   <span className="text-slate-400">200 OK • 38ms</span>
                 </div>
-                <p className="text-slate-400 text-[11px]">
+                <p className="text-slate-400 text-[11px] overflow-x-auto">
                   <span className="text-purple-400">def</span> <span className="text-blue-300">execute_code</span>(input):<br />
                   &nbsp;&nbsp;<span className="text-purple-400">return</span> f<span className="text-emerald-300">&quot;Result: &#123;eval(input)&#125;&quot;</span>
                 </p>
