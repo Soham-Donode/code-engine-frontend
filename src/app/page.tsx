@@ -9,7 +9,7 @@ export default function LandingPage() {
       <div className="relative w-full min-h-screen overflow-hidden shadow-2xl bg-sky-100 flex flex-col justify-between">
         
         {/* Background Landscape Image */}
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-0 pointer-events-none">
           <Image
             src="/bg-image.png"
             alt="Lush Meadow Background"
@@ -18,24 +18,33 @@ export default function LandingPage() {
             priority
           />
           {/* Soft gradient overlay for text readability */}
-          <div className="absolute inset-0 bg-gradient-to-b from-sky-100/90 via-sky-50/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-sky-100/90 via-sky-50/40 to-transparent pointer-events-none" />
         </div>
 
-        {/* Hero Content Section */}
-        <div className="relative z-10 flex flex-col items-center text-center px-4 pt-24 sm:pt-36 pb-8 sm:pb-12 space-y-6 sm:space-y-7 max-w-3xl mx-auto">
-          {/* Main Headline */}
-          <h1 className="text-3xl sm:text-5xl lg:text-7xl font-serif tracking-tight text-slate-900 leading-[1.12] sm:leading-[1.08] max-w-3xl font-normal">
-            Autopilot for your Code Sandbox. <br />
-            <span>Scale effortlessly</span>
-          </h1>
+        {/* Hero Content Section — Vertically Centered */}
+        <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center py-10 sm:py-16 space-y-5 sm:space-y-7 max-w-3xl mx-auto my-auto w-full">
+          {/* Text block — padded inward */}
+          <div className="px-4 sm:px-6 space-y-3 sm:space-y-4">
+            {/* Main Headline */}
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-serif tracking-tight text-slate-900 leading-[1.12] sm:leading-[1.1] max-w-2xl font-normal">
+              Autopilot for your Code Sandbox. Scale effortlessly
+            </h1>
 
-          {/* Primary Call To Action */}
-          <Link
-            href="/dashboard"
-            className="mt-2 sm:mt-4 bg-slate-950 hover:bg-slate-800 text-white text-xs sm:text-sm font-medium px-7 sm:px-9 py-3 sm:py-3.5 rounded-2xl shadow-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
-          >
-            Get Started
-          </Link>
+            {/* Subtitle */}
+            <p className="text-sm sm:text-base text-slate-500 leading-relaxed max-w-sm sm:max-w-xl mx-auto font-sans">
+              Submit Python, C++, or Node.js code to isolated Docker sandboxes and stream real-time output via SSE — all with a single API call.
+            </p>
+          </div>
+
+          {/* Primary Call To Action — full width on mobile, compact on desktop */}
+          <div className="w-full px-3 sm:px-12 sm:flex sm:justify-center">
+            <Link
+              href="/dashboard"
+              className="w-full sm:w-auto justify-center bg-slate-950 hover:bg-slate-800 text-white text-sm font-medium px-9 py-3.5 rounded-2xl shadow-xl transition-all hover:scale-105 active:scale-95 flex items-center gap-2"
+            >
+              Get Started
+            </Link>
+          </div>
         </div>
 
         {/* Bottom Card Mockup Floating in Meadow */}
