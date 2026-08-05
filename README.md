@@ -1,34 +1,114 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Code Engine - Frontend
 
-## Getting Started
+An interactive, modern web application for **Code Engine**, an online code execution platform. Built with Next.js (App Router), TypeScript, Tailwind CSS, Monaco Editor, and Supabase.
 
-First, run the development server:
+---
+
+## 🚀 Features
+
+- 💻 **Interactive Playground**: Multi-language code editor powered by Monaco Editor with syntax highlighting, custom themes, and instant code execution.
+- 📊 **Dashboard**: Execution metrics, recent run history, language breakdown, and performance analytics.
+- 🔐 **Authentication**: User authentication via Supabase (OAuth with GitHub/Google and Email/Password).
+- 📚 **Documentation**: API guides, code engine architecture specs, and usage examples.
+- 🌗 **Dark / Light Theme**: Dynamic theme toggle powered by `next-themes`.
+- ⚡ **Real-time Output**: Live code execution output streaming and detailed diagnostic reports.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
+- **Library**: [React 19](https://react.dev/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Code Editor**: [@monaco-editor/react](https://github.com/suren-atoyan/monaco-react)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/) & [tw-animate-css](https://github.com/jamiebuilds/tw-animate-css)
+- **UI Components**: [Radix UI](https://www.radix-ui.com/), [Base UI](https://base-ui.com/), [Lucide Icons](https://lucide.dev/)
+- **Authentication & Database**: [Supabase JS](https://supabase.com/docs) & `@supabase/ssr`
+- **Toasts**: [Sonner](https://sonner.emilkowal.ski/)
+
+---
+
+## 📂 Directory Structure
+
+```text
+code-engine-frontend/
+├── src/
+│   ├── app/
+│   │   ├── dashboard/     # User dashboard and analytics page
+│   │   ├── docs/          # Documentation and API reference
+│   │   ├── playground/    # Code editor and execution playground
+│   │   ├── globals.css    # Global styling and Tailwind directives
+│   │   ├── layout.tsx     # Root layout component
+│   │   └── page.tsx       # Landing / Home page
+│   ├── components/        # Shared UI components (AuthModal, Navbar, ThemeProvider, etc.)
+│   ├── context/           # React context providers
+│   └── lib/               # Utility functions and Supabase client setup
+├── public/                # Static assets
+├── .env.local             # Local environment variables
+└── package.json           # Project dependencies and scripts
+```
+
+---
+
+## ⚙️ Getting Started
+
+### Prerequisites
+
+- **Node.js** >= 18.x
+- **npm**, **pnpm**, or **yarn**
+- Running instance of **Code Engine Backend** (default: `http://localhost:8080`)
+
+### Installation
+
+1. Clone the repository and navigate to the frontend directory:
+
+```bash
+cd code-engine-frontend
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+### Environment Configuration
+
+Create a `.env.local` file in the `code-engine-frontend` root directory with the following variables:
+
+```env
+# Backend API Base URL
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
+
+# Supabase Credentials
+NEXT_PUBLIC_SUPABASE_URL=https://<your-supabase-project>.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<your-supabase-publishable-key>
+# Alternatively:
+# NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-supabase-anon-key>
+```
+
+### Running Locally
+
+Start the Next.js development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-## Learn More
+## 📜 Available Scripts
 
-To learn more about Next.js, take a look at the following resources:
+- `npm run dev` - Starts the development server with Hot Module Replacement.
+- `npm run build` - Builds the application for production deployment.
+- `npm run start` - Runs the compiled production build.
+- `npm run lint` - Runs ESLint to check for code quality and formatting issues.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🔗 Backend Integration
 
-## Deploy on Vercel
+The frontend connects to the **Code Engine Backend** service for compiling and running code snippets. Ensure your backend server is active and accessible via `NEXT_PUBLIC_API_BASE_URL`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
